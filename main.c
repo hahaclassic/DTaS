@@ -1,19 +1,37 @@
 #include "reader.h"
+#include "writer.h"
+#include "processing.h"
 
 int main() 
 {
+    show_menu();
+
     int err;
+    big_float num1, num2, result;
 
-    big_int num;
-    zero_big_int(num);
+    err = read_data(&num1, &num2);
+    if (err)
+    {
+        err_message(err);
+        return err;
+    }
 
-    struct big_float divider;
+    // print_result(&num1);
+    // print_result(&num2);
 
-    err = read_data(num, &divider);
+    err = multiply(&num1, &num2, &result);
+    if (err == ERR_MACHINE_ZERO)
+    {
+        printf("\nРезультат: Машинный нуль.\n");
+    } 
+    else if (err == ERR_INF)
+    {
+        printf("\nРезультат: Машинная бесконечность.\n");
+    }
+    else
+    {
+        print_result(&result);
+    }
 
-    //err = divide_num();
-
-    //print_num();
-
-    return err;
+    return STATUS_OK;;
 }
