@@ -16,7 +16,7 @@ int get_int_number(char *str, big_float *num, int len) {
 
     if (len - end > MAX_MANTISSA)
     {
-        return ERR_READ_INT;
+        return ERR_BUFFER_OVERFLOW;
     } 
 
     int count = 0;
@@ -221,6 +221,10 @@ int get_float_number(char *str, big_float *num, int len)
     {
         return ERR_READ_FLOAT;
     }
+    if (e_index == len - 2 && (str[strlen(str)-1] == '-' || str[strlen(str)-1] == '+'))
+    {
+        return ERR_READ_FLOAT;
+    }
 
 
     int count;
@@ -306,7 +310,6 @@ int get_str(char *str, size_t max, int *len)
         {
             significant = true;
         }
-    
 
         if (i > max - 1)
         {

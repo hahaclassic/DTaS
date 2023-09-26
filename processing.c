@@ -137,18 +137,6 @@ int multiply(big_float *a, big_float *b, big_float *result)
 {
     init_bigfloat(result);
 
-    int exp = a->exp + b->exp;
-    if (exp > MAX_EXP_NUM)
-    {
-        return ERR_INF;
-    } 
-    else if (exp < -MAX_EXP_NUM)
-    {
-        return ERR_MACHINE_ZERO;
-    }
-    result->exp = exp;
-
-
     if ((a->mantissa_sign && !b->mantissa_sign) || (!a->mantissa_sign && b->mantissa_sign))
     {
         result->mantissa_sign = false;
@@ -197,10 +185,22 @@ int multiply(big_float *a, big_float *b, big_float *result)
     if (mantissa[len - 1] == 0) {
         len--;
     }
+    
 
     // Приведение порядка
+    result->exp = a->exp + b->exp;
     int predict = count_digits(a->mantissa, a->len) + count_digits(b->mantissa, b->len);
     result->exp -= predict - count_digits(mantissa, len);
+
+    if (result->exp > MAX_EXP_NUM)
+    {
+        return ERR_INF;
+    } 
+    else if (result->exp < -MAX_EXP_NUM)
+    {
+        return ERR_MACHINE_ZERO;
+    }
+
 
     // Копирование значений
     for (int i = 0; i < len; i++)
