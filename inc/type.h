@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define MAX_NUMBER_OF_RECORDS 50
 
@@ -13,6 +14,16 @@ typedef struct
     int owners;
 } old_t;
 #define OLD_H
+#endif
+
+#ifndef KEY_H
+#define KEY_H
+
+typedef struct
+{
+    int index;
+    int value;
+} key_t;
 #endif
 
 #ifndef CAR_H
@@ -32,3 +43,5 @@ typedef struct
 } car_t;  
 #define CAR_H
 #endif
+
+void copy(void *src, void *dest, size_t size, size_t len);

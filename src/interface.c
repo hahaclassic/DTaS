@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include "errors.h"
-#include "type.h"
+#include "interface.h"
 
 /*
     Данный модуль отвечает за взаимодействие с пользователем через терминал.
@@ -39,24 +37,24 @@ int read_new_record(car_t *car, int len)
         return ERR_NOT_ENOUGH_SPACE;
     }
 
-    int err, input;
+    int err, input, temp;
 
     printf("\nВведите марку автомобиля: ");
-    int err = get_str(stdin, car->brand);
+    err = get_str(stdin, car->brand);
     if (err)
     {
         return err;
     }
 
     printf("Введите страну-производитель: ");
-    int err = get_str(stdin, car->country);
+    err = get_str(stdin, car->country);
     if (err)
     {
         return err;
     }
 
     printf("Введите цвет автомобиля: ");
-    int err = get_str(stdin, car->color);
+    err = get_str(stdin, car->color);
     if (err)
     {
         return err;
@@ -70,18 +68,20 @@ int read_new_record(car_t *car, int len)
     }
 
     printf("Поддерживается ли обслуживание? (Да - 1 / Нет - 0): ");
-    input = scanf("%d", &car->service);
-    if (input != 1)
+    input = scanf("%d", &temp);
+    if (input != 1 || (temp != 1 && temp != 0))
     {
         return ERR_INVALID_USER_DATA;
     }
+    car->service = (bool) temp;
 
     printf("Новый автомобиль? (Да - 1 / Нет - 0): ");
-    input = scanf("%d", &car->condition);
-    if (input != 1)
+    input = scanf("%d", &temp);
+    if (input != 1 || (temp != 1 && temp != 0))
     {
         return ERR_INVALID_USER_DATA;
     }
+    car->condition = (bool) temp;
 
     if (!car->condition)
     {
@@ -124,6 +124,16 @@ int read_new_record(car_t *car, int len)
     }
     
     return STATUS_OK;
+}
+
+int get_price()
+{
+
+}
+
+char* get_brand()
+{
+
 }
 
 // read value from stdin

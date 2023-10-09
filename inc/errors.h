@@ -1,9 +1,6 @@
 
 #define STATUS_OK 0
 
-// command line arguments error
-#define ERR_INCORRECT_ARG 1
-
 // file errors
 #define ERR_FILE_OPEN 2
 #define ERR_EMPTY_FILE 3
@@ -22,8 +19,12 @@
 
 #define ERR_INVALID_USER_DATA 22
 
+// data deleting errors
+#define ERR_NO_DATA_WITH_THIS_VALUE 31
+
+
 // data writing errors
-#define ERR_SAVE_DATA 31
+#define ERR_SAVE_DATA 41
 
 
 // other

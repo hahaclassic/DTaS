@@ -7,7 +7,7 @@ static int get_str(FILE *file, char *str)
     char *check;
 
     check = fgets(buff, sizeof(buff), file);
-    if (check == NULL || feof(file))
+    if (check == NULL)
     {
         return ERR_READ_DATA;
     }
@@ -16,6 +16,12 @@ static int get_str(FILE *file, char *str)
         return ERR_INVALID_DATA;
     }
     buff[strlen(buff) - 1] = '\0';
+
+    // if (strlen(buff) == 0) 
+    // {
+    //     printf("2\n");
+    //     return ERR_READ_DATA;
+    // }
 
     check = strncpy(str, buff, MAX_STR_LEN + 1);
     if (check == NULL)
@@ -36,18 +42,18 @@ int get_car(FILE *file, car_t *car)
     err = get_str(file, car->brand);
     if (err)
     {
-        if (err = ERR_READ_DATA)
+        if (err == ERR_READ_DATA)
         {
             err = ERR_READ_BEGINNING_OF_STRUCT;
         }
         return err;
     }
-
+    
     // Get country
     err = get_str(file, car->country);
     if (err)
     {
-        if (err = ERR_READ_DATA)
+        if (err == ERR_READ_DATA)
         {
             err = ERR_INCOMPLETE_STRUCT;
         }
@@ -58,30 +64,31 @@ int get_car(FILE *file, car_t *car)
     err = get_str(file, car->color);
     if (err)
     {
-        if (err = ERR_READ_DATA)
+        if (err == ERR_READ_DATA)
         {
             err = ERR_INCOMPLETE_STRUCT;
         }
         return err;
     }
 
-
     // Get price, service, condition
-    input = fscanf(file, "%d\n%d\n%d", &car->price, &car->service, &car->condition);
+    int service, condition; 
+    input = fscanf(file, "%d\n%d\n%d\n", &car->price, &service, &condition);
     if (input != 3) 
     {
         return ERR_INCOMPLETE_STRUCT;
     }
-    if (car->price <= 0)
+    if (car->price <= 0 || (service != 0 && service != 1) || (condition != 0 && condition != 1))
     {
         return ERR_INVALID_DATA;
     }
+    car->service = service;
+    car->condition = condition;
 
     // Get others fields
-
     if (!car->condition)
     {
-        input = fscanf(file, "%d\n%d\n%d\n%d", &car->old.year,
+        input = fscanf(file, "%d\n%d\n%d\n%d\n", &car->old.year,
         &car->old.mileage, &car->old.repairs, &car->old.owners);
         if (input != 4) 
         {
@@ -94,7 +101,7 @@ int get_car(FILE *file, car_t *car)
     }
     else
     {
-        input = fscanf(file, "%d", &car->guarantee);
+        input = fscanf(file, "%d\n", &car->guarantee);
         if (input != 1) 
         {
             return ERR_INCOMPLETE_STRUCT;
@@ -109,14 +116,15 @@ int get_car(FILE *file, car_t *car)
 }
 
 // Reads all objects from the file into an array. Returns the error code.
-int get_all(FILE *file, car_t cars[], int keys[], int *len)
+int get_all(FILE *file, car_t cars[], key_t keys[], int *len)
 {
     *len = 0;
 
-    int err = get_object(file, &cars[*len]);
+    int err = get_car(file, &cars[*len]);
     while (!err)
     {
-        keys[*len] = cars[*len].price;
+        keys[*len].index = *len;
+        keys[*len].value = cars[*len].price;
 
         (*len)++;
 
@@ -125,14 +133,10 @@ int get_all(FILE *file, car_t cars[], int keys[], int *len)
             return ERR_TOO_MANY_OBJECTS;
         }   
 
-        err = get_object(file, &cars[*len]);
+        err = get_car(file, &cars[*len]);
     }
-    
-    if (*len == 0 && err == ERR_READ_BEGINNING_OF_STRUCT)
-    {
-        return ERR_NO_DATA;
-    }
-    else if (err != ERR_READ_BEGINNING_OF_STRUCT)
+
+    if (err != ERR_READ_BEGINNING_OF_STRUCT)
     {
         return err;
     }
@@ -148,14 +152,14 @@ int add_record(FILE *file, car_t *car)
         return ERR_SAVE_DATA;
     }
 
-    int input = fprintf(file, "%d\n%d\n%d\n", car->price, car->service, car->condition);
+    input = fprintf(file, "%d\n%d\n%d\n", car->price, car->service, car->condition);
     if (input < 0) {
         return ERR_SAVE_DATA;
     }
 
     if (!car->condition)
     {
-        int input = fprintf(file, "%d\n%d\n%d\n%d\n", car->old.year, car->old.mileage, 
+        input = fprintf(file, "%d\n%d\n%d\n%d\n", car->old.year, car->old.mileage, 
             car->old.repairs, car->old.owners);
         if (input < 0) {
             return ERR_SAVE_DATA;
@@ -163,7 +167,7 @@ int add_record(FILE *file, car_t *car)
     }
     else
     {
-        int input = fprintf(file, "%d\n", car->guarantee);
+        input = fprintf(file, "%d\n", car->guarantee);
         if (input < 0) {
             return ERR_SAVE_DATA;
         }
@@ -173,14 +177,23 @@ int add_record(FILE *file, car_t *car)
 }
 
 // Deletes all recors with price == value
-int delete_record(FILE *file, car_t cars[], int *len, int value)
+int delete_record(FILE *file, car_t cars[], int len, int value)
 {
-    for (int i = 0; i < *len; i++)
+    bool check = true;
+    for (int i = 0; i < len; i++)
     {
         if (cars[i].price != value)
         {
             add_record(file, &cars[i]);
+            check = false;
         }
     }
+
+    if (check)
+    {
+        return ERR_NO_DATA_WITH_THIS_VALUE;
+    }
+
+    return STATUS_OK;
 }
 

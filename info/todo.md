@@ -1,22 +1,41 @@
-# sort.c
-- selection_sort()
-- quick_sort()
-- partion()
+# sort.c +
+- selection_sort() +
+- quick_sort() +
+- partion() +
 
 # interface.c
-- read_new_record()
-- read_value
-- show_menu()
+- read_new_record() +
+- Сделать функцию для получения данных, по которым будет производиться поиск
+- show_menu() 
 
-# storage.c
-- get_car()
-- get_all()
-- add_record()
-- delete_record()
+- Сообщения с информацией об успешности выполнения операции
 
-# writer.c
+# storage.c  
+- get_car() +
+- get_all() + 
+- add_record() +
+- delete_record() +
+
+# writer.c СДЕЛАТЬ ФОРМАТИРОВАННЫЙ ВЫВОД
 - print_table()
 - print_table_using_keys()
 - print_keys()
 - print_spec()
 
+# errors.c
+- err_message()
+
+----
+после сортировки таблицы или ключей, будет предложен вывод:
+1. вывод таблицы ключей
+2. вывод таблицы авто 
+3. вывод таблицы авто через таблицу ключей
+---
+1. Сделать форматированный вывод для каждой таблицы
+---
+
+
+1. вывести исходную таблицу ключей
+2. вывести отсортированную таблицу ключей
+3. вывести отсортированную таблицу авто
+4. вывести таблицу авто через отсортированную таблицу ключей

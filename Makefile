@@ -6,7 +6,7 @@ INC_DIR := ./inc
 SRC_DIR := ./src
 UNIT_TESTS_DIR := ./unit_tests
 
-CFLAGS := -std=c99 -Wall -Wextra -Werror -Wpedantic -I $(INC_DIR)
+CFLAGS := -std=c11 -Wall -Wextra -Werror -Wpedantic -I $(INC_DIR)
 CHECK_FLAGS := -lcheck #-lpthread -lrt -lm -lsubunit
 
 # Получение переменных с файлами
