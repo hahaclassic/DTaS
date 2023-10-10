@@ -1,9 +1,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAX_NUMBER_OF_RECORDS 50
+#define MAX_NUMBER_OF_RECORDS 5000
 
-#define MAX_STR_LEN 20
+#define MAX_STR_LEN 15
 
 #ifndef OLD_H
 typedef struct
@@ -42,6 +42,20 @@ typedef struct
     };
 } car_t;  
 #define CAR_H
+#endif
+
+
+#ifndef STATS_H
+#define STATS_H
+typedef struct
+{
+    unsigned long long qsort_cars_time;
+    unsigned long long qsort_keys_time;
+    unsigned long long ssort_cars_time;
+    unsigned long long ssort_keys_time;
+    int cars_mem;
+    int keys_mem;
+} stat_t;
 #endif
 
 void copy(void *src, void *dest, size_t size, size_t len);

@@ -37,12 +37,9 @@ unit_tests.exe: $(OUT_DIR) $(UNIT_TESTS_OBJFILES) $(TESTED_OBJFILES)
 $(OUT_DIR)/%.o: $(UNIT_TESTS_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-.PHONY: func stats clean
+.PHONY: func generate
 clean:
 	rm -f $(OUT_DIR)/*
 
-func: app.exe
-	./func_tests/scripts/func_tests.sh
-
-stats: app.exe
-	./func_tests/scripts/stats.sh
+generate:
+	./generate_data.py

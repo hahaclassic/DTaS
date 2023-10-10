@@ -19,7 +19,6 @@ static int get_str(FILE *file, char *str)
 
     // if (strlen(buff) == 0) 
     // {
-    //     printf("2\n");
     //     return ERR_READ_DATA;
     // }
 
@@ -179,17 +178,17 @@ int add_record(FILE *file, car_t *car)
 // Deletes all recors with price == value
 int delete_record(FILE *file, car_t cars[], int len, int value)
 {
-    bool check = true;
+    int count = 0;
     for (int i = 0; i < len; i++)
     {
         if (cars[i].price != value)
         {
             add_record(file, &cars[i]);
-            check = false;
+            count++;
         }
     }
 
-    if (check)
+    if (count == len)
     {
         return ERR_NO_DATA_WITH_THIS_VALUE;
     }
