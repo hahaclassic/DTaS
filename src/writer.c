@@ -198,7 +198,7 @@ void show_stats(stat_t *stats, int len)
     else if (stats->ssort_keys_time > stats->qsort_keys_time)
     {
         gain_time = (float) (stats->ssort_keys_time - stats->qsort_keys_time) / (float) stats->qsort_keys_time * 100;
-        printf("- quick_sort быстрее selection_sort, на %f%%\n", gain_time);
+        printf("- quick_sort быстрее selection_sort на %f%%\n", gain_time);
     }
     else if (stats->ssort_keys_time < stats->qsort_keys_time)
     {

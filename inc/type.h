@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define MAX_NUMBER_OF_RECORDS 5000
+#define MAX_NUMBER_OF_RECORDS 10000
 
 #define MAX_STR_LEN 15
 

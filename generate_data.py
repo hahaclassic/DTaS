@@ -59,8 +59,8 @@ COLOR = [
     "purple"
 ]
 
-count = 5000
-f = open("./data/cars5000.txt", 'a')
+count = 10000
+f = open("./data/cars10000.txt", 'a')
 
 for i in range(count):
     brand = BRAND[random.randint(0, len(BRAND)-1)]
