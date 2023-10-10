@@ -86,3 +86,13 @@ light blue
 0
 1
 20
+Ford
+USA
+black
+10000
+1
+0
+2009
+10000
+0
+1

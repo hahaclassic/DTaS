@@ -69,7 +69,7 @@ int get_new_record(car_t *car, int len)
         return ERR_INVALID_USER_DATA;
     }
 
-    printf("Введите цену автомобиля: ");
+    printf("Введите цену автомобиля (целое число, $): ");
     input = scanf("%d", &car->price);
     if (input != 1 || car->price <= 0)
     {
@@ -141,7 +141,7 @@ int read_value(int *value)
     printf("\n=================================================================================\n");
     printf("Удаление автомобилей из указанной ценовой категории\n");
     printf("---------------------------------------------------------------------------------\n");
-    printf("Введите цену: ");
+    printf("Введите цену (целое число, $): ");
     int input = scanf("%d", value);
     if (input != 1) {
         return ERR_INVALID_USER_DATA;
