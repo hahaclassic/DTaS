@@ -1,0 +1,1 @@
+a ./func_tests/data/neg_07_1_in.txt ./func_tests/data/neg_07_2_in.txt ./out/temp.txt
