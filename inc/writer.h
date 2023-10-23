@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include "matrix.h"
+#include "std_matrix.h"
+#include "sparse_matrix.h"
 #include "errors.h"
 
-int write_data(char *file_name, matrix_t *matrix);
+void write_sparse_matrix(FILE *file, sparse_matrix_t *matrix);
+
+int write_sparse_matrix_file(char *file_name, sparse_matrix_t *matrix);

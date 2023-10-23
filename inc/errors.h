@@ -22,6 +22,10 @@
 #define ERR_NO_SINGLE_SOLUTION 11
 
 
+// sparse_matrix
+#define ERR_WRONG_TYPE_MATRIX 20
+
+
 // others
 #define ERR_MEMORY_ALLOCATION 30
 

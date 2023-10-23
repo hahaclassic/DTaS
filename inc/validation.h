@@ -1,9 +1,10 @@
 #include "errors.h"
 #include <stdbool.h>
-#include <string.h>
 
-#define AMOUNT 0
-#define MULTIPLICATION 1
-#define INVERSE_MATRIX 2
+#define FILE_IN true
+#define FILE_OUT true
+#define STDIN false
+#define STDOUT false
 
-int check_args(int argc, char **argv, int *operation);
+int check_args(int argc, bool *input, bool *output);
+

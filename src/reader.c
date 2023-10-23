@@ -20,10 +20,11 @@ int get_sizes(FILE *file, size_t *num_of_rows, size_t *num_of_columns)
 }
 
 
-int get_elements(FILE *file, matrix_t *matrix)
+int get_elements(FILE *file, std_matrix_t *matrix)
 {
     int input;
     size_t count = 0;
+    matrix->n_nz = 0;
 
     for (size_t i = 0; i < matrix->rows; i++)
     {
@@ -34,6 +35,10 @@ int get_elements(FILE *file, matrix_t *matrix)
             {
                 break;
             } 
+            if (fabs(matrix->ptrs[i][j]) > EPS)
+            {
+                matrix->n_nz++;
+            }
             count++;
         }
     }
@@ -47,17 +52,44 @@ int get_elements(FILE *file, matrix_t *matrix)
         return ERR_NOT_ENOUGH_ELEMENTS;
     }
 
-    double check_eof;
-    if (!feof(file) && fscanf(file, "%lf", &check_eof) == 1)
+    return STATUS_OK;
+}
+
+int read_matrix(FILE *file, std_matrix_t *matrix)
+{
+    if (file == stdin)
     {
-        return ERR_TOO_MANY_ELEMENTS;
-    } 
+        printf("Введите размеры матрицы: ");
+    }
+   
+    int err = get_sizes(file, &matrix->rows, &matrix->columns);
+    if (err)
+    {
+        return err;
+    }
+
+    matrix->ptrs = allocate_std_matrix(matrix->rows, matrix->columns);
+    if (!matrix->ptrs)
+    {
+        return ERR_MEMORY_ALLOCATION;
+    }
+
+    if (file == stdin)
+    {
+        printf("Введите элементы матрицы %zu на %zu: \n", matrix->rows, matrix->columns);
+    }
+    err = get_elements(file, matrix);
+
+    if (err)
+    {   
+        free_std_matrix(matrix);
+        return err;
+    }
 
     return STATUS_OK;
 }
 
-
-int read_matrix(char *file_name, matrix_t *matrix)
+int read_matrix_file(char *file_name, std_matrix_t *matrix)
 {
     int err;
     FILE *file = fopen(file_name, "r");
@@ -66,26 +98,10 @@ int read_matrix(char *file_name, matrix_t *matrix)
         return ERR_FILE_OPEN;
     }
 
-    err = get_sizes(file, &matrix->rows, &matrix->columns);
-    if (err)
-    {
-        fclose(file);
-        return err;
-    }
-
-    matrix->ptrs = allocate_matrix(matrix->rows, matrix->columns);
-    if (!matrix->ptrs)
-    {
-        fclose(file);
-        return ERR_MEMORY_ALLOCATION;
-    }
-
-    err = get_elements(file, matrix);
+    err = read_matrix(file, matrix);
     fclose(file);
-
     if (err)
-    {   
-        free_matrix(matrix);
+    {
         return err;
     }
 
