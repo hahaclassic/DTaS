@@ -1,1 +1,0 @@
-m ./func_tests/data/pos_04_1_in.txt ./func_tests/data/pos_04_2_in.txt ./out/temp.txt

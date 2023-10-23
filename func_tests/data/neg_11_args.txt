@@ -1,1 +1,0 @@
-o ./func_tests/data/neg_11_in.txt ./out/temp.txt
