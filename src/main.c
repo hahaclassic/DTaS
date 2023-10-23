@@ -4,7 +4,6 @@
 #include "writer.h"
 #include "multiplication.h"
 
-
 int main(int argc, char **argv)
 {
     std_matrix_t std1, std2, std_res;
@@ -14,6 +13,7 @@ int main(int argc, char **argv)
     int err = check_args(argc, &input, &output);
     if (err)
     {
+        err_message(err);
         return err;
     }
 
@@ -22,15 +22,18 @@ int main(int argc, char **argv)
         err = read_matrix_file(argv[1], &std1);
         if (err)
         {
+            err_message(err);
             return err;
         }
         err = read_matrix_file(argv[2], &std2);
     }
     else
     {
+        show_menu();
         err = read_matrix(stdin, &std1);
         if (err)
         {
+            err_message(err);
             return err;
         }
         err = read_matrix(stdin, &std2);
@@ -38,6 +41,7 @@ int main(int argc, char **argv)
     if (err)
     {
         free_std_matrix(&std1);
+        err_message(err);
         return err;
     }
 
@@ -46,6 +50,7 @@ int main(int argc, char **argv)
     {
         free_std_matrix(&std1);
         free_std_matrix(&std2);
+        err_message(ERR_INCORRECT_MATRIX_SIZES);
         return ERR_INCORRECT_MATRIX_SIZES;
     }
 
@@ -54,6 +59,7 @@ int main(int argc, char **argv)
     {
         free_std_matrix(&std1);
         free_std_matrix(&std2);
+        err_message(err);
         return err;
     }
 
@@ -63,6 +69,7 @@ int main(int argc, char **argv)
         free_std_matrix(&std_res);
         free_std_matrix(&std1);
         free_std_matrix(&std2);
+        err_message(err);
         return err;
     }
 
@@ -73,6 +80,7 @@ int main(int argc, char **argv)
         free_std_matrix(&std1);
         free_std_matrix(&std2);
         free_sparse_matrix(&csr);
+        err_message(err);
         return err;
     }
 
@@ -84,6 +92,7 @@ int main(int argc, char **argv)
         free_std_matrix(&std2);
         free_sparse_matrix(&csr);
         free_sparse_matrix(&csc);
+        err_message(err);
         return err;
     }
 
@@ -91,73 +100,51 @@ int main(int argc, char **argv)
     init_sparse_matrix(&csc, &std2);
 
     // Multiplication
+    stats_t stats;
+    int err1, err2;
+    unsigned long long start, end;
+
+    err1 = microseconds_now(&start);
     std_matrix_multiply(&std1, &std2, &std_res);
+    err2 = microseconds_now(&end);
 
+    if (err1 | err2)
+    {
+        err_message(ERR_TIMER);
+        return ERR_TIMER;
+    }
+    stats.std_matrix_time = end - start;
+
+
+    err1 = microseconds_now(&start);
     sparse_matrix_multiply(&csr, &csc, &sparse_res);
+    err2 = microseconds_now(&end);
 
+    if (err1 | err2)
+    {
+        err_message(ERR_TIMER);
+        return ERR_TIMER;
+    }
+    stats.sparse_matrix_time = end - start;
 
-    // Printing result
-    // for (size_t i = 0; i < csr.n_nz; i++)
-    // {
-    //     printf("%lf ", csr.nums[i]);
-    // }
-    // printf("\n");
-    // for (size_t i = 0; i < csr.n_nz; i++)
-    // {
-    //     printf("%zu ", csr.idx[i]);
-    // }
-    // printf("\n");
-    // for (size_t i = 0; i <= csr.n_rows; i++)
-    // {
-    //     printf("%zu ", csr.start[i]);
-    // }
-    // printf("\n");
-    // printf("\n");
-
-
-    // for (size_t i = 0; i < csc.n_nz; i++)
-    // {
-    //     printf("%lf ", csc.nums[i]);
-    // }
-    // printf("\n");
-    // for (size_t i = 0; i < csc.n_nz; i++)
-    // {
-    //     printf("%zu ", csc.idx[i]);
-    // }
-    // printf("\n");
-    // for (size_t i = 0; i <= csc.n_cols; i++)
-    // {
-    //     printf("%zu ", csc.start[i]);
-    // }
-    // printf("\n");
-    // printf("\n");
-
-
-    // for (size_t i = 0; i < sparse_res.n_nz; i++)
-    // {
-    //     printf("%lf ", sparse_res.nums[i]);
-    // }
-    // printf("\n");
-    // for (size_t i = 0; i < sparse_res.n_nz; i++)
-    // {
-    //     printf("%zu ", sparse_res.idx[i]);
-    // }
-    // printf("\n");
-    // for (size_t i = 0; i <= sparse_res.n_rows; i++)
-    // {
-    //     printf("%zu ", sparse_res.start[i]);
-    // }
-    // printf("\n");
-    // printf("\n");
+    stats.std_matrix_mem = sizeof(double) * (std1.columns * std1.rows + std2.columns * std2.rows + std_res.rows * std_res.columns);
+    stats.std_matrix_mem += sizeof(double*) * (std1.rows + std2.rows + std_res.rows);
+    stats.sparse_matrix_mem = sizeof(double) * csr.n_nz + sizeof(size_t) * csr.n_nz + sizeof(size_t) * csr.n_rows;
+    stats.sparse_matrix_mem += sizeof(double) * csc.n_nz + sizeof(size_t) * csc.n_nz + sizeof(size_t) * csc.n_cols;
+    stats.sparse_matrix_mem += sizeof(double) * sparse_res.n_nz + sizeof(size_t) * sparse_res.n_nz + sizeof(size_t) * sparse_res.n_rows;
+   
     if (output)
     {
         err = write_sparse_matrix_file(argv[3], &sparse_res);
     }
-    else
-    {
+    else if (print_matrix())
+    {   
+        printf("---------------------------------------------------------------------------------\n");
         printf("Результат:\n");
         write_sparse_matrix(stdout, &sparse_res);
     }
+
+    print_stats(&stats, &csr, &csc);
 
     free_std_matrix(&std1);
     free_std_matrix(&std2);
@@ -168,6 +155,7 @@ int main(int argc, char **argv)
 
     if (err)
     {
+        err_message(ERR_TIMER);
         return err;
     }
 

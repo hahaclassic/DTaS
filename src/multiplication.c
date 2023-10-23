@@ -16,22 +16,85 @@ void std_matrix_multiply(std_matrix_t *matrix1, std_matrix_t *matrix2, std_matri
     }
 }
 
-double get_num(size_t row_start, size_t row_end, size_t col_start, size_t col_end, 
+double vec_mult(size_t row_start, size_t row_end, size_t col_start, size_t col_end, 
     sparse_matrix_t *m1, sparse_matrix_t *m2)
 {
     double result = 0;
    
+    if (col_end == 0 || col_end == col_start)
+    {
+        return result;
+    }
+
+    size_t col_idx = col_start;
+
     for (size_t k = row_start; k < row_end; k++)
     {
-        for (size_t col_idx = col_start; col_idx < col_end; col_idx++)
+        // Общая сложность алгоритма - O(n)
+        while (col_idx < col_end)
         {
             if (m1->idx[k] == m2->idx[col_idx])
             {
                 //printf("%lf %lf %zu\n", m1->nums[k], m2->nums[col_idx], col_idx);
                 result += m1->nums[k] * m2->nums[col_idx];
+                col_idx++;
                 break;
             }
+            if (m1->idx[k] < m2->idx[col_idx])
+            {
+                break;
+            }
+            else
+            {
+                col_idx++;
+            }
         }
+
+        // Binary search - Общая сложность алгоритма - O(n * log(n))
+        // size_t left = col_start, right = col_end - 1;
+        // size_t mid = (right + left) / 2;
+
+        // if (m1->idx[k] == m2->idx[left])
+        // {
+        //     result += m1->nums[k] * m2->nums[left];
+        //     continue;
+        // }
+        // if (m1->idx[k] == m2->idx[right])
+        // {
+        //     result += m1->nums[k] * m2->nums[right];
+        //     continue;
+        // }
+
+        // while (right - left > 1)
+        // {
+        //     if (m1->idx[k] == m2->idx[mid])
+        //     {
+        //         //printf("%lf %lf %zu\n", m1->nums[k], m2->nums[col_idx], col_idx);
+        //         result += m1->nums[k] * m2->nums[mid];
+        //         break;
+        //     }
+
+        //     if (m1->idx[k] > m2->idx[mid])
+        //     {
+        //         left = mid;
+        //     }
+        //     else 
+        //     {
+        //         right = mid;
+        //     }
+        //     mid = (right + left) / 2;
+        // }
+
+        // Linear search - Общая сложность алгоритма - O(n^2)
+        // for (size_t col_idx = col_start; col_idx < col_end; col_idx++)
+        // {
+        //     if (m1->idx[k] == m2->idx[col_idx])
+        //     {
+        //         //printf("%lf %lf %zu\n", m1->nums[k], m2->nums[col_idx], col_idx);
+        //         result += m1->nums[k] * m2->nums[col_idx];
+        //         break;
+        //     }
+        // }
     }
 
     return result;
@@ -54,7 +117,7 @@ void sparse_matrix_multiply(sparse_matrix_t *matrix1, sparse_matrix_t *matrix2, 
             col_start = matrix2->start[j];
             col_end = matrix2->start[j + 1];
             
-            result->nums[n_nz] = get_num(row_start, row_end, col_start, col_end, matrix1, matrix2);
+            result->nums[n_nz] = vec_mult(row_start, row_end, col_start, col_end, matrix1, matrix2);
 
             if (fabs(result->nums[n_nz]) > EPS) 
             {

@@ -12,19 +12,12 @@
 #define ERR_INCORRECT_MATRIX_SIZES 4
 #define ERR_READ_DATA 4
 #define ERR_NOT_ENOUGH_ELEMENTS 5
-#define ERR_TOO_MANY_ELEMENTS 6
 
 // operations
-#define ERR_DIFFERENT_SIZES 7
 #define ERR_INCORRECT_SIZES 8
-#define ERR_NON_SQUARE_MATRIX 9
 
-#define ERR_NO_SINGLE_SOLUTION 11
-
-
-// sparse_matrix
-#define ERR_WRONG_TYPE_MATRIX 20
-
+// timer error
+#define ERR_TIMER 50
 
 // others
 #define ERR_MEMORY_ALLOCATION 30
