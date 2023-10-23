@@ -8,7 +8,7 @@ int get_sizes(FILE *file, size_t *num_of_rows, size_t *num_of_columns)
     {
         return ERR_READ_DATA;
     }
-    if (n < 1 || m < 1)
+    if (n < 1 || m < 1 || n > MAX_SIZE || m > MAX_SIZE)
     {
         return ERR_INCORRECT_MATRIX_SIZES;
     }

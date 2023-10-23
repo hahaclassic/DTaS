@@ -2,6 +2,8 @@
 #include "errors.h"
 #include "std_matrix.h"
 
+#define MAX_SIZE 2000
+
 int get_sizes(FILE *file, size_t *num_of_rows, size_t *num_of_columns);
 
 int get_elements(FILE *file, std_matrix_t *matrix);

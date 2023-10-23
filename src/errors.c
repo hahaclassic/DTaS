@@ -18,13 +18,16 @@ void err_message(int err)
         case ERR_READ_DATA:
             printf("[ERR]: Ошибка при попытке чтения данных.\n");
             break;
+        case ERR_INCORRECT_MATRIX_SIZES:
+            printf("[ERR]: Указаны некорректные размеры.\n");
+            break;
         case ERR_NOT_ENOUGH_ELEMENTS:
-            printf("[ERR]: В файле указано недостаточно элементов.\n");
+            printf("[ERR]: В файле указано недостаточное количество элементов.\n");
             break;
         case ERR_MEMORY_ALLOCATION:
             printf("[ERR]: Ошибка при попытке выделения памяти.\n");
             break;
-        case ERR_INCORRECT_SIZES:
+        case ERR_DIFFERENT_MATRIX_SIZES:
             printf("[ERR]: Невозможно выполнить умножение, матрицы имеют некорректные размеры.\n" \
             "Количество столбцов первой матрицы не совпадает с кол-вом строк второй матрицы.\n");
             break;

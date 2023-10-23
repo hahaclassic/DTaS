@@ -9,12 +9,12 @@
 #define ERR_FILE_OPEN 2
 
 // data reading errors
-#define ERR_INCORRECT_MATRIX_SIZES 4
+#define ERR_INCORRECT_MATRIX_SIZES 3
 #define ERR_READ_DATA 4
 #define ERR_NOT_ENOUGH_ELEMENTS 5
 
 // operations
-#define ERR_INCORRECT_SIZES 8
+#define ERR_DIFFERENT_MATRIX_SIZES 8
 
 // timer error
 #define ERR_TIMER 50

@@ -50,8 +50,8 @@ int main(int argc, char **argv)
     {
         free_std_matrix(&std1);
         free_std_matrix(&std2);
-        err_message(ERR_INCORRECT_MATRIX_SIZES);
-        return ERR_INCORRECT_MATRIX_SIZES;
+        err_message(ERR_DIFFERENT_MATRIX_SIZES);
+        return ERR_DIFFERENT_MATRIX_SIZES;
     }
 
     err = set_std_matrix(&std_res, std1.rows, std2.columns);
