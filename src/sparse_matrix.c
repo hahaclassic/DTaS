@@ -5,7 +5,7 @@ int set_sparse_matrix(sparse_matrix_t *matrix, size_t n_rows, size_t n_cols, siz
 {
     if (n_rows < 1 || n_cols < 1)
     {
-        return ERR_INCORRECT_SIZES;
+        return ERR_INCORRECT_MATRIX_SIZES;
     }
 
     matrix->n_rows = n_rows;
@@ -36,7 +36,7 @@ int set_sparse_matrix(sparse_matrix_t *matrix, size_t n_rows, size_t n_cols, siz
     }
     else
     {
-        matrix->start = malloc((n_cols + 1) * sizeof(size_t));
+        matrix->start = calloc(n_cols + 1, sizeof(size_t));
     }
    
     if (!matrix->start)

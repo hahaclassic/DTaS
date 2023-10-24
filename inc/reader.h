@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include "errors.h"
-#include "std_matrix.h"
+#include "sparse_matrix.h"
 
-#define MAX_SIZE 2000
+#define MAX_SIZE 1000
+#define STDIN 1
 
 int get_sizes(FILE *file, size_t *num_of_rows, size_t *num_of_columns);
 
-int get_elements(FILE *file, std_matrix_t *matrix);
+int get_elements(FILE *stream, sparse_matrix_t *sparse, std_matrix_t *std);
 
-int read_matrix(FILE *file, std_matrix_t *matrix);
+int read_matrix(FILE *file, sparse_matrix_t *sparse, std_matrix_t *std);
 
-int read_matrix_file(char *file_name, std_matrix_t *matrix);
+int read_matrix_file(char *file_name, sparse_matrix_t *sparse, std_matrix_t *std)

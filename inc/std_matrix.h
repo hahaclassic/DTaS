@@ -4,8 +4,6 @@
 
 #define EPS 1.0e-7
 
-#define MAX_COUNT 100
-
 #ifndef STD_MATRIX_T
 #define STD_MATRIX_T
 typedef struct std_matrix_t

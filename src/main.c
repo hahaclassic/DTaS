@@ -19,29 +19,31 @@ int main(int argc, char **argv)
 
     if (input)
     {
-        err = read_matrix_file(argv[1], &std1);
+        err = read_matrix_file(argv[1], &std1, &csr);
         if (err)
         {
             err_message(err);
             return err;
         }
-        err = read_matrix_file(argv[2], &std2);
+
+        err = read_matrix_file(argv[2], &std2, &csc);
     }
     else
     {
         show_menu();
-        err = read_matrix(stdin, &std1);
+        err = read_matrix(stdin, &std1, &csr);
         if (err)
         {
             err_message(err);
             return err;
         }
-        err = read_matrix(stdin, &std2);
+        err = read_matrix(stdin, &std2, &csc);
     }
     if (err)
     {
-        free_std_matrix(&std1);
         err_message(err);
+        free_std_matrix(&std1);
+        free_sparse_matrix(&csr);
         return err;
     }
 
@@ -50,6 +52,8 @@ int main(int argc, char **argv)
     {
         free_std_matrix(&std1);
         free_std_matrix(&std2);
+        free_sparse_matrix(&csr);
+        free_sparse_matrix(&csc);
         err_message(ERR_DIFFERENT_MATRIX_SIZES);
         return ERR_DIFFERENT_MATRIX_SIZES;
     }
@@ -59,27 +63,8 @@ int main(int argc, char **argv)
     {
         free_std_matrix(&std1);
         free_std_matrix(&std2);
-        err_message(err);
-        return err;
-    }
-
-    err = set_sparse_matrix(&csr, std1.rows, std1.columns, std1.n_nz, CSR);
-    if (err)
-    {
-        free_std_matrix(&std_res);
-        free_std_matrix(&std1);
-        free_std_matrix(&std2);
-        err_message(err);
-        return err;
-    }
-
-    err = set_sparse_matrix(&csc, std2.rows, std2.columns, std2.n_nz, CSC);
-    if (err)
-    {
-        free_std_matrix(&std_res);
-        free_std_matrix(&std1);
-        free_std_matrix(&std2);
         free_sparse_matrix(&csr);
+        free_sparse_matrix(&csc);
         err_message(err);
         return err;
     }

@@ -30,7 +30,7 @@ int set_std_matrix(std_matrix_t *matrix, size_t num_of_rows, size_t num_of_colum
 {
     if (num_of_rows < 1 || num_of_columns < 1)
     {
-        return ERR_INCORRECT_SIZES;
+        return ERR_INCORRECT_MATRIX_SIZES;
     }
 
     matrix->rows = num_of_rows;
