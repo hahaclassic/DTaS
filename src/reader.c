@@ -13,7 +13,7 @@ int readline(FILE *stream, int *row_idx, int *col_idx, double *val)
 /* Reads amount of ROWS, COLS, and Non-null elements with validation */
 int get_meta(FILE *stream, int *n_rows, int *n_cols, int *n_nz)
 {
-    if (fscanf(stream, "%d %d %lf", n_rows, n_cols, n_nz) != 3)
+    if (fscanf(stream, "%d %d %d", n_rows, n_cols, n_nz) != 3)
     {
         return ERR_INCORRECT_DATA;
     }
@@ -37,16 +37,14 @@ int get_meta(FILE *stream, int *n_rows, int *n_cols, int *n_nz)
 /* Reads matrices from stream */
 int get_elements(FILE *stream, sparse_matrix_t *sparse, std_matrix_t *std)
 {
-    size_t nz = std->n_nz;
-
-    int row_idx, col_idx;
+    int row_idx, col_idx, last_idx = -1;
     double val;
 
-    for (size_t i = 0; i < nz; ++i) {
+    for (size_t i = 0; i < std->n_nz; ++i) {
         
         if (stream == stdin)
         {
-            printf("Введите элемент в формате i j value: ");
+            printf("Введите элемент в формате 'i j value': ");
         }
         int err = readline(stream, &row_idx, &col_idx, &val);
 
@@ -55,46 +53,38 @@ int get_elements(FILE *stream, sparse_matrix_t *sparse, std_matrix_t *std)
             return err;
         }
 
-        // Check the upper bound
-        if (row_idx >= (int) std->rows || col_idx >= (int) std->columns) {
+        if (row_idx >= (int) std->rows || col_idx >= (int) std->columns || row_idx < 0 || col_idx < 0) 
+        {
             return ERR_INCORRECT_DATA;
         }
-        // Check lower bound
-        if (row_idx < 0 || col_idx < 0) {
+        if (fabs(val) < EPS) 
+        {
             return ERR_INCORRECT_DATA;
         }
 
         // Fill CSR
-        //printf("COLIDX=%d ", col_idx);
         sparse->nums[i] = val;
         if (sparse->type)
         {
+            if (row_idx != last_idx)
+            {
+                sparse->start[row_idx] = i;
+            }
+            last_idx = row_idx;
             sparse->idx[i] = col_idx;
-            sparse->start[row_idx + 1]++;
         }
         else 
         {
+            if (col_idx != last_idx)
+            {
+                sparse->start[col_idx] = i;
+            }
+            last_idx = col_idx;
             sparse->idx[i] = row_idx;
-            sparse->start[col_idx + 1]++;
         }
 
         // Fill STD
-        std->ptrs[ row_idx][col_idx] = val;
-    }
-
-    // Shift (idk what that is) 
-
-    if (sparse->type)
-    {
-        for (size_t i = 0; i < sparse->n_rows; ++i) {
-            sparse->start[i + 1] += sparse->start[i];
-        }
-    } 
-    else
-    {
-        for (size_t i = 0; i < sparse->n_cols; ++i) {
-            sparse->start[i + 1] += sparse->start[i];
-        }
+        std->ptrs[row_idx][col_idx] = val;
     }
 
     return STATUS_OK;
@@ -102,12 +92,7 @@ int get_elements(FILE *stream, sparse_matrix_t *sparse, std_matrix_t *std)
 
 
 int read_matrix(FILE *file, sparse_matrix_t *sparse, std_matrix_t *std)
-{
-    if (file == stdin)
-    {
-        printf("Введите кол-во строк, столбцов и ненелувых элементов матрицы: ");
-    }
-   
+{  
     int n_rows, n_cols, n_nz;
     int err = get_meta(file, &n_rows, &n_cols, &n_nz);
     if (err)
@@ -121,19 +106,15 @@ int read_matrix(FILE *file, sparse_matrix_t *sparse, std_matrix_t *std)
         return err;
     }
 
-    std->rows = sparse->n_rows;
-    std->columns = sparse->n_cols;
-    std->n_nz = sparse->n_nz;
-
-    std->ptrs = allocate_std_matrix(std->rows, std->columns);
-    if (!std->ptrs)
+    std->n_nz = n_nz;
+    err = set_std_matrix(std, n_rows, n_cols);
+    if (err)
     {
         free_sparse_matrix(sparse);
-        return ERR_MEMORY_ALLOCATION;
+        return err;
     }
 
     err = get_elements(file, sparse, std);
-
     if (err)
     {
         free_std_matrix(std);

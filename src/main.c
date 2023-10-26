@@ -8,6 +8,8 @@ int main(int argc, char **argv)
 {
     std_matrix_t std1, std2, std_res;
     sparse_matrix_t csr, csc, sparse_res;
+    csr.type = CSR;
+    csr.type = CSC;
 
     bool input, output;
     int err = check_args(argc, &input, &output);
@@ -19,25 +21,29 @@ int main(int argc, char **argv)
 
     if (input)
     {
-        err = read_matrix_file(argv[1], &std1, &csr);
+        err = read_matrix_file(argv[1], &csr, &std1);
         if (err)
         {
             err_message(err);
             return err;
         }
 
-        err = read_matrix_file(argv[2], &std2, &csc);
+        err = read_matrix_file(argv[2], &csc, &std2);
     }
     else
     {
         show_menu();
-        err = read_matrix(stdin, &std1, &csr);
+        printf("Введите кол-во строк, столбцов и ненелувых элементов 1-ой матрицы (через пробел): ");
+
+        err = read_matrix(stdin, &csr, &std1);
         if (err)
         {
             err_message(err);
             return err;
         }
-        err = read_matrix(stdin, &std2, &csc);
+
+        printf("Введите кол-во строк, столбцов и ненелувых элементов 2-ой матрицы (через пробел): ");
+        err = read_matrix(stdin, &csc, &std2);
     }
     if (err)
     {
@@ -46,6 +52,39 @@ int main(int argc, char **argv)
         free_sparse_matrix(&csr);
         return err;
     }
+
+    for (size_t i = 0; i < csr.n_nz; i++)
+    {
+        printf("%lf ", csr.nums[i]);
+    }
+    printf("\n");
+    for (size_t i = 0; i < csr.n_nz; i++)
+    {
+        printf("%zu ", csr.idx[i]);
+    }
+    printf("\n");
+    for (size_t i = 0; i < csr.n_rows; i++)
+    {
+        printf("%zu ", csr.start[i]);
+    }
+    printf("\n");
+
+
+    for (size_t i = 0; i < csc.n_nz; i++)
+    {
+        printf("%lf ", csc.nums[i]);
+    }
+    printf("\n");
+    for (size_t i = 0; i < csr.n_nz; i++)
+    {
+        printf("%zu ", csc.idx[i]);
+    }
+    printf("\n");
+    for (size_t i = 0; i < csr.n_rows; i++)
+    {
+        printf("%zu ", csc.start[i]);
+    }
+    printf("\n");
 
     // Проверка корректности размерностей матриц
     if (std1.columns != std2.rows)
@@ -81,8 +120,8 @@ int main(int argc, char **argv)
         return err;
     }
 
-    init_sparse_matrix(&csr, &std1);
-    init_sparse_matrix(&csc, &std2);
+    // init_sparse_matrix(&csr, &std1);
+    // init_sparse_matrix(&csc, &std2);
 
     // Multiplication
     stats_t stats;
