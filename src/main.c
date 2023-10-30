@@ -16,6 +16,7 @@ int main()
     err = select_operation(&operation, &main_operation);
     if (err)
     {
+        err_message(err);
         return err;
     }
 
@@ -23,6 +24,7 @@ int main()
     err = read_str(stdin, str);
     if (err)
     {
+        err_message(err);
         return err;
     }
 
@@ -43,6 +45,7 @@ int main()
         err = is_correct(str, &stack, &ok, &stats);
         if (err)
         {
+            err_message(err);
             return err;
         }
 
@@ -59,6 +62,7 @@ int main()
 
         if (err)
         {
+            err_message(err);
             return err;
         }
 
@@ -81,10 +85,12 @@ int main()
         int err2 = microseconds_now(&end);
         if (err)
         {
+            err_message(err);
             return err;
         }
         if (err1 | err2)
         {
+            err_message(ERR_TIMER);
             return ERR_TIMER;
         }
         arr_time = end - start;
@@ -101,10 +107,12 @@ int main()
 
         if (err)
         {
+            err_message(err);
             return err;
         }
         if (err1 | err2)
         {
+            err_message(ERR_TIMER);
             return ERR_TIMER;
         }
 

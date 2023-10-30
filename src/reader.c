@@ -43,6 +43,10 @@ int read_str(FILE *file, char *str)
     {
         return err;
     }
+    else if (i == 0 || feof(file))
+    {
+        return ERR_INCORRECT_DATA;
+    }
 
     str[i] = '\0';
     printf("\n");
