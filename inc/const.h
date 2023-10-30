@@ -1,6 +1,6 @@
 
 // Максимальный размер стека
-#define MAX_SIZE 1000
+#define MAX_SIZE 2000
 
 // Операции
 #define ARR_STACK 1

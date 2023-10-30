@@ -88,7 +88,7 @@ int main()
             return ERR_TIMER;
         }
         arr_time = end - start;
-        arr_mem = sizeof(size_t) + sizeof(char) * stats.max;
+        arr_mem = sizeof(size_t) + sizeof(char) * MAX_SIZE; // stats.max;
 
         init_list_stack(&stack, &list_stack);
         init_stats(&stats, operation);
@@ -107,7 +107,6 @@ int main()
         {
             return ERR_TIMER;
         }
-
 
         list_time = end - start;
         list_mem = stats.max * sizeof(node_t) + sizeof(size_t);

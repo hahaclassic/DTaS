@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include "const.h"
 
-#define MAX_SIZE 1000
-
 #ifndef STACK_ARRAY_H
 #define STACK_ARRAY_H
 

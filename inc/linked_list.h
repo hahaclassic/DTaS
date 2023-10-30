@@ -11,8 +11,8 @@ typedef struct node_t node_t;
 
 struct node_t
 {
-    char symbol;
     node_t *next;
+    char symbol;
 };
 
 typedef struct list_stack_t
