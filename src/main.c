@@ -10,7 +10,7 @@ int main()
     int err;
     int operation;
     int main_operation;
-    char str[MAX_LEN + 1]; 
+    char str[MAX_LEN + 1];
 
     print_message(MENU);
     err = select_operation(&operation, &main_operation);
@@ -94,7 +94,7 @@ int main()
             return ERR_TIMER;
         }
         arr_time = end - start;
-        arr_mem = sizeof(size_t) + sizeof(char) * MAX_SIZE; // stats.max;
+        arr_mem = sizeof(arr_stack_t);
 
         init_list_stack(&stack, &list_stack);
         init_stats(&stats, operation);
@@ -117,7 +117,7 @@ int main()
         }
 
         list_time = end - start;
-        list_mem = stats.max * sizeof(node_t) + sizeof(size_t);
+        list_mem = stats.max * sizeof(node_t) + sizeof(list_stack_t);
 
         print_result(ok);
         print_statistics(arr_time, arr_mem, list_time, list_mem);

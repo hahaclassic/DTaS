@@ -50,6 +50,10 @@ int is_correct(char *str, stack_t *stack, bool *ok, stats_t *stats)
                 stats->free_nodes[stats->n_nodes] = (((list_stack_t*) stack->base)->top);
                 stats->n_nodes++;
             }
+            if (stats->mode == STATS)
+            {
+                stats->curr--;
+            }
             stack->delete(stack->base);
         }
         else
