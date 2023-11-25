@@ -1,83 +1,63 @@
-#include <stdio.h>
-#include "errors.h"
-#include "validation.h"
+#include "tree.h"
 #include "reader.h"
 #include "writer.h"
-#include "sort.h"
-#include "linked_list.h"
-#include "find_teams.h"
+#include "validation.h"
 
-int main(int argc, char **argv)
+int main() //int argc, char **argv)
 {
-    int err;
-    int operation;
+    // int iostream;
+    // error_t err;
 
-    // Checking args
-    err = check_args(argc, argv, &operation);
+    // err = check_args(argc, &iostream);
+
+    // if (err)
+    // {
+    //     return err;
+    // }
+
+    FILE *in = stdin, *out = stdout;
+
+    node_t *root = NULL;
+
+    // if (iostream == FILE_IN)
+    // {
+    //     in = fopen(argv[1], "r");
+    //     if (in == NULL)
+    //     {
+    //         return ERR_FILE_OPEN;
+    //     }
+
+    //     error_t err = get_all(in, &root);
+
+    //     if (err)
+    //     {
+    //         bst_free(root);
+    //         return err;
+    //     }
+    // }
+
+    // menu()
+
+    error_t err = get_all(in, &root);
     if (err)
     {
-        //err_message(err);
         return err;
     }
 
-    // Opening file
-    FILE *file = fopen(argv[1], "r");
-    if (!file)
+    bst_travesal(root, print_node, out);
+
+    node_t *copy = bst_deep_copy(root);
+
+    if (copy == NULL)
     {
-        //err_message(err);
-        return ERR_FILE_OPEN;
+        bst_free(root);
+        return ERR_MEMORY_ALLOCATION;
     }
 
-    // Getting all teams from a file
-    dynamic_arr_t teams;
-    da_init(&teams, sizeof(team_t));
-    
-    err = get_all(file, &teams);
-    fclose(file);
-    if (err)
-    {   
-        free_teams(&teams);
-        //err_message(err);
-        return err;
-    }    
+    printf("\n\n");
+    bst_travesal(copy, print_node, out);
 
-    node_t *head = list_init(&teams);
-
-    if (head == NULL)
-    {
-        return ERR_INIT_LIST;
-    }
-
-    // Performing the specified operation
-    switch (operation)
-    {
-        case SORT:
-            head = sort(head, compare_teams);    
-            err = print_all(argv[2], head);
-            break;
-        case PRINT_ALL:
-            err = print_all(argv[2], head);
-            break;
-        case FIND:
-            head = sort(head, compare_teams);
-
-            team_t *best, *worst;
-            err = find_teams(head, argv[3], &best, &worst);
-
-            list_free(head);
-
-            if (err)
-            {
-                free_teams(&teams);
-                //err_message(err);
-                return err;
-            }
-
-            err = print_sponsor_teams(argv[2], best, worst);
-            break;
-    }
-
-    free_teams(&teams);
-    //err_message(err);
-    return err;
+    bst_free(copy);
+    bst_free(root);
+    return STATUS_OK;
 }

@@ -1,25 +1,18 @@
 #include "validation.h"
 
 // Checks the correctness of the specified arguments
-int check_args(int argc, char **argv, int *operation)
+error_t check_args(int argc, int *iostream)
 {
-    if (argc < 3 || argc > 4)
+    if (argc == 1)
     {
-        return ERR_INCORRECT_ARG;
+        *iostream = STREAM_STDIN;
+        return STATUS_OK;
+    }
+    else if (argc == 3)
+    {
+        *iostream = STREAM_FILE;
+        return STATUS_OK;
     }
 
-    if (argc == 3)
-    {
-        *operation = SORT;
-    }
-    else if (!strcmp(argv[3], "ALL"))
-    {
-        *operation = PRINT_ALL;
-    } 
-    else 
-    {
-        *operation = FIND;
-    } 
-    
-    return STATUS_OK;
+    return ERR_INCORRECT_ARG;
 }

@@ -5,10 +5,9 @@
 #include "string.h"
 
 // operation modes
-#define SORT 0
-#define PRINT_ALL 1
-#define FIND 2
+#define STREAM_FILE 0
+#define STREAM_STDIN 1
 
-int check_args(int argc, char **argv, int *operation);
+error_t check_args(int argc, int *iostream);
 
 #endif

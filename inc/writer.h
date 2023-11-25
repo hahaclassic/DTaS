@@ -3,12 +3,8 @@
 
 #include "stdio.h"
 #include "string.h"
-#include "errors.h"
-#include "datatype.h"
-#include "linked_list.h"
+#include "tree.h"
 
-int print_all(char *file_name, node_t *head);
-
-int print_sponsor_teams(char *file_name, team_t *best, team_t *worst);
+void print_node(node_t *node, void *data);
 
 #endif

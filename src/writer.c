@@ -1,98 +1,68 @@
 #include "writer.h"
 
-// Outputs the fields of a single object to the console.
-void print_team(FILE *file, void *team)
+void print_date(FILE *stream, node_t *node)
 {
-    team_t *t = team;
-    fprintf(file, "%s\n%d\n%d\n%s\n", t->name, t->win, t->loss, t->sponsor);
-}
-
-// Outputs the linked list items to the console.
-int print_all(char *file_name, node_t *head)
-{
-    FILE *file = fopen(file_name, "w");
-    if (file == NULL)
+    if (node->last_access->day < 10)
     {
-        return ERR_FILE_OPEN;
+        fprintf(stream, "0");
     }
-
-    while (head != NULL)
-    {   
-        print_team(file, pop_front(&head));
+    fprintf(stream, "%zu.", node->last_access->day);
+    if (node->last_access->month < 10)
+    {
+        fprintf(stream, "0");
     }
-    fclose(file);
+    fprintf(stream, "%zu.%zu ", node->last_access->month, node->last_access->year);
 
-    return STATUS_OK;
+    if (node->last_access->hours < 10)
+    {
+        fprintf(stream, "0");
+    }
+    fprintf(stream, "%zu:", node->last_access->hours);
+
+    if (node->last_access->minutes < 10)
+    {
+        fprintf(stream, "0");
+    }
+    fprintf(stream, "%zu", node->last_access->minutes);
 }
 
-// void print_list(node_t *head)
+void print_node(node_t *node, void *data)
+{   
+    FILE *stream = data;
+    fprintf(stream, "-");
+    for (size_t i = 0; i < 3; i++)
+    {
+        fprintf(stream, "%c", node->attr->user[i]);
+    }
+    for (size_t i = 0; i < 3; i++)
+    {
+        fprintf(stream, "%c", node->attr->group[i]);
+    }
+    for (size_t i = 0; i < 3; i++)
+    {
+        fprintf(stream, "%c", node->attr->others[i]);
+    }
+
+    fprintf(stream, " ");
+    print_date(stream, node);
+
+    fprintf(stream, " %s\n", node->name);
+}
+
+// void print_node_dot(node_t *node, void *param)
 // {
-//     while (head != NULL)
-//     {   
-//         print_team(head->data);
-//         head = head->next;
-//     }
+//     FILE *stream = param;
+
+//     if (node->left)
+//         fprintf(stream, "\"");
+//         print_date(node);
+//         fprintf(stream, " %s\" -> %s;\n", node->name, tree->left->name);
+
+//     if (node->right)
+//         fprintf(stream, "%s -> %s;\n", node->name, tree->right->name);
 // }
 
-int print_sponsor_teams(char *file_name, team_t *best, team_t *worst)
-{
-    FILE *file = fopen(file_name, "w");
-    if (file == NULL)
-    {
-        return ERR_FILE_OPEN;
-    }
-
-    if (best == worst)
-    {
-        fprintf(file, "У этого спонсора всего одна команда: \n");
-        print_team(file, best);
-        fclose(file);
-        return STATUS_OK;
-    }
-
-    fprintf(file, "Лучшая команда: \n");
-    print_team(file, best);
-    fprintf(file, "\n");
-
-    fprintf(file, "Худшая команда: \n");
-    print_team(file, worst);
-
-    fclose(file);
-    return STATUS_OK;
-}
-
-// // Outputs the linked list items to the console.
-// void show_list(node_t *head)
+// void make_png_tree(FILE *stream, void *data)
 // {
-//     while (head != NULL)
-//     {
-//         if (head->data != NULL)
-//         {
-//             printf("%s ", ((team_t *) head->data)->name);
-//         }
-//         head = head->next;
-//     }
-//     printf("\n");
-// }
 
-// void show_splits(node_t *a, node_t *b)
-// {
-//     while (a != NULL)
-//     {
-//         if (a->data != NULL)
-//         {
-//             printf("%s ", ((team_t *) a->data)->name);
-//         }
-//         a = a->next;
-//     }
-//     printf("| ");
-//     while (b != NULL)
-//     {
-//         if (b->data != NULL)
-//         {
-//             printf("%s ", ((team_t *) b->data)->name);
-//         }
-//         b = b->next;
-//     }
-//     printf("\n");
 // }
