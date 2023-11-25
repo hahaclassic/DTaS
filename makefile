@@ -37,7 +37,7 @@ unit_tests.exe: $(OUT_DIR) $(UNIT_TESTS_OBJFILES) $(TESTED_OBJFILES) ./out/dynam
 $(OUT_DIR)/%.o: $(UNIT_TESTS_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-.PHONY: func stats clean mem_check
+.PHONY: func stats clean mem_check png_graph
 clean:
 	rm -f $(OUT_DIR)/*
 
@@ -49,3 +49,6 @@ stats: app.exe
 
 mem_check: app.exe
 	./func_tests/scripts/func_tests.sh -m
+
+png_graph:
+	dot -v -Tpng -o ./out/graph.png ./out/graph.dot
