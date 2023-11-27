@@ -94,8 +94,11 @@ int main(int argc, char **argv)
         case TIMER:
             err = measure_time(&root, &alpha_tree_time, &deletion_time, &convertation_time);
 
-            show_stats(alpha_tree_time, deletion_time + convertation_time,
-                convertation_time, deletion_time);
+            if (!err)
+            {
+                show_stats(alpha_tree_time, deletion_time + convertation_time,
+                    convertation_time, deletion_time);
+            }
             break;
 
         case SHOW_FILES:

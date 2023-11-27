@@ -142,7 +142,7 @@ error_t date_tree_delete_by_time(node_t *root)
 error_t measure_time(node_t **root, unsigned long long *alpha_tree_time, 
     unsigned long long *deletion_time, unsigned long long *convertation_time)
 {
-    if (root == NULL)
+    if (*root == NULL)
     {
         return ERR_EMPTY_TREE;
     }
