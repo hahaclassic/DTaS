@@ -423,21 +423,21 @@ node_t *bst_deep_copy(node_t *src_root)
     return copy;
 }
 
-// in-order travesal
-void bst_in_order_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param)
+// in-order traversal
+void bst_in_order_traversal(node_t *root, void (*action)(node_t *data, void *param), void *param)
 {
     if (root == NULL)
     {
         return;
     }
 
-    bst_in_order_travesal(root->left, action, param);
+    bst_in_order_traversal(root->left, action, param);
     action(root, param);
-    bst_in_order_travesal(root->right, action, param);
+    bst_in_order_traversal(root->right, action, param);
 }
 
-// pre-order travesal
-void bst_pre_order_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param)
+// pre-order traversal
+void bst_pre_order_traversal(node_t *root, void (*action)(node_t *data, void *param), void *param)
 {
     if (root == NULL)
     {
@@ -446,7 +446,7 @@ void bst_pre_order_travesal(node_t *root, void (*action)(node_t *data, void *par
 
     action(root, param);
 
-    bst_pre_order_travesal(root->left, action, param);
-    bst_pre_order_travesal(root->right, action, param);
+    bst_pre_order_traversal(root->left, action, param);
+    bst_pre_order_traversal(root->right, action, param);
 }
 

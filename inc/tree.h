@@ -69,11 +69,11 @@ int compare_dates(void *arg1, void *arg2);
 
 int is_older(void *arg1, void *arg2);
 
-// TRAVESAL
+// TRAVERSAL
 
-void bst_in_order_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param);
+void bst_in_order_traversal(node_t *root, void (*action)(node_t *data, void *param), void *param);
 
-void bst_pre_order_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param);
+void bst_pre_order_traversal(node_t *root, void (*action)(node_t *data, void *param), void *param);
 
 
 // SPECIAL

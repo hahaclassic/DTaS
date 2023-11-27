@@ -97,7 +97,7 @@ void export_to_dot(char *file_name, const char *tree_name, node_t *root)
     }
     else
     {
-        bst_pre_order_travesal(root, to_dot, file);
+        bst_pre_order_traversal(root, to_dot, file);
     }
 
     fprintf(file, "}\n");
@@ -132,6 +132,6 @@ void print_tree(FILE *stream, node_t *root)
     }
     else
     {
-        bst_in_order_travesal(root, print_node, stream);
+        bst_in_order_traversal(root, print_node, stream);
     }
 }
