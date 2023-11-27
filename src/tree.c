@@ -1,4 +1,5 @@
 #include "tree.h"
+#include "writer.h"
 
 int compare_names(void *arg1, void *arg2)
 {
@@ -158,102 +159,178 @@ error_t bst_append(node_t **root, node_t *node, int (*compare)(void *arg1, void 
     return STATUS_OK;
 }
 
-// node_t *bst_min(node_t *root)
-// {
-//     if (root == NULL)
-//     {
-//         return NULL;
-//     }
+node_t *bst_min(node_t *root)
+{
+    if (root == NULL)
+    {
+        return NULL;
+    }
 
-//     while (root->left != NULL)
-//     {
-//         root = root->left;
-//     }
+    while (root->left != NULL)
+    {
+        root = root->left;
+    }
 
-//     return root;
-// }
-
-
-// node_t *bst_remove(node_t *root, int (*compare)(void *arg1, void *param), void *param, int *err)
-// {
-//     if (root == NULL)
-//     {
-//         (*err) = ERR_NOT_FOUND;
-//         return root;
-//     }
-
-//     node_t *temp;
-//     int result = compare(root, param);
-
-//     if (result < 0)
-//     {
-//         root->left = bst_remove(root->left, compare, param, err);
-//     }
-//     else if (result > 0)
-//     {
-//         root->right = bst_remove(root->right, compare, param, err);
-//     }
-//     else if (root->left != NULL && root->right != NULL)
-//     {
-//         temp = bst_min(root->right);
-//         temp->left = root->left;
-//         temp->right = bst_remove(root->right, compare, temp->key, err);
-
-//         free_node(root);       
-//         root = temp;
-//     }
-//     else
-//     {
-//         if (root->left == NULL && root->right == NULL)
-//         {
-//             return NULL;
-//         }
-
-//         temp = root;
-//         if (root->left != NULL)
-//         {
-//             root = root->left;
-//         }
-//         else
-//         {
-//             root = root->right;
-//         }
-//         free_node(temp);       
-//     }
-
-//     return root;
-// }
+    return root;
+}
 
 
-// int bst_find(node_t *root, const char *key, int **value)
-// {
-//     //bst_travesal(root, print, NULL);
 
-//     if (root == NULL)
-//     {
-//         return ERR_NOT_FOUND;
-//     }
+node_t *copy_node(node_t *node);
 
-//     while (root != NULL)
-//     {
-//         int result = strcmp(key, root->key);
-//         if (result == 0)
-//         {   
-//             (*value) = &root->value;
-//             return STATUS_OK;
-//         }
-//         if (result > 0)
-//         {
-//             root = root->right;
-//         }
-//         else
-//         {
-//             root = root->left;
-//         }
-//     }
+node_t *bst_remove(node_t *root, int (*compare)(void *arg1, void *param), void *param, error_t *err)
+{
+    if (root == NULL)
+    {
+        (*err) = ERR_NOT_FOUND;
+        return root;
+    }
 
-//     return ERR_NOT_FOUND;
-// }
+    node_t *temp;
+    int result = compare(param, root);
+
+    if (result < 0)
+    {
+        root->left = bst_remove(root->left, compare, param, err);
+    }
+    else if (result > 0)
+    {
+        root->right = bst_remove(root->right, compare, param, err);
+    }
+    else if (root->left != NULL && root->right != NULL)
+    {
+        temp = bst_min(root->right);
+        temp = copy_node(temp);
+        temp->left = root->left;
+        temp->right = bst_remove(root->right, compare, temp, err);
+
+        free_node(root);       
+        root = temp;
+    }
+    else
+    {
+        temp = root;
+        if (root->left != NULL)
+        {
+            root = root->left;
+        }
+        else
+        {
+            root = root->right;
+        }
+        free_node(temp);       
+    }
+
+    //(*err) = STATUS_OK;
+    return root;
+}
+
+
+#define MASK_LATER 0
+#define MASK_OLDER_OR_EQUAL -1 
+
+int is_older(void *arg1, void *arg2)
+{
+    if (compare_dates(arg2, arg1) == SECOND_LATER)
+    {
+        return MASK_LATER;
+    }
+
+    return MASK_OLDER_OR_EQUAL;
+}
+
+node_t *bst_alpha_remove_all(node_t *root, node_t *mask)
+{
+    if (root == NULL)
+    {
+        return root;
+    }
+
+    if (root->left)
+        root->left = bst_alpha_remove_all(root->left, mask);
+    if (root->right)
+        root->right = bst_alpha_remove_all(root->right, mask);
+
+    node_t *temp;
+    int result = is_older(mask, root);
+
+    if (result == MASK_LATER && root->left != NULL && root->right != NULL)
+    {
+        temp = bst_min(root->right);
+        temp = copy_node(temp);
+        temp->left = root->left;
+
+        error_t err;
+        temp->right = bst_remove(root->right, compare_names, temp, &err);
+
+        free_node(root);       
+        root = temp;
+    }
+    else if (result == MASK_LATER)
+    {
+        temp = root;
+        if (root->left == NULL && root->right == NULL)
+        {
+            root = NULL;
+        }
+        else if (root->left != NULL)
+        {
+            root = root->left;
+        }
+        else
+        {
+            root = root->right;
+        }
+        free_node(temp);  
+    }
+
+    return root;
+}
+
+node_t *bst_date_remove_all(node_t *root, node_t *mask)
+{
+    node_t *temp;
+
+    if (root == NULL)
+    {
+        return NULL;
+    }
+
+    int result = is_older(mask, root);
+
+    if (result == MASK_LATER)
+    {
+        bst_free(root->left);
+        temp = bst_date_remove_all(root->right, mask);
+
+        free_node(root);
+        root = temp;
+    }
+    else
+    {
+        root->left = bst_date_remove_all(root->left, mask);
+    }
+
+    return root;
+}
+
+
+// Сортировка дерева по другому ключу. Передаваемый компаратор учитывает повторения ключей
+void bst_convert(node_t *src_root, node_t **dest_root, int (*compare)(void *arg1, void *param))
+{
+    if (src_root == NULL)
+    {
+        return;
+    }
+
+    bst_convert(src_root->left, dest_root, compare);
+    bst_convert(src_root->right, dest_root, compare);
+
+    src_root->left = NULL;
+    src_root->right = NULL;
+
+    bst_append(dest_root, src_root, compare);
+}
 
 node_t *copy_node(node_t *node)
 {
@@ -347,14 +424,29 @@ node_t *bst_deep_copy(node_t *src_root)
 }
 
 // in-order travesal
-void bst_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param)
+void bst_in_order_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param)
 {
     if (root == NULL)
     {
         return;
     }
 
-    bst_travesal(root->left, action, param);
+    bst_in_order_travesal(root->left, action, param);
     action(root, param);
-    bst_travesal(root->right, action, param);
+    bst_in_order_travesal(root->right, action, param);
 }
+
+// pre-order travesal
+void bst_pre_order_travesal(node_t *root, void (*action)(node_t *data, void *param), void *param)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+
+    action(root, param);
+
+    bst_pre_order_travesal(root->left, action, param);
+    bst_pre_order_travesal(root->right, action, param);
+}
+

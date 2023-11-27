@@ -1,8 +1,4 @@
 #include "reader.h"
-#include "tree.h"
-#include "dynamic_arr.h"
-#include <ctype.h>
-
 /*
     1. Ввести количество файлов
     2. Ввести файлы в стиле -rwx------ 12.20.10 12:10 name
@@ -17,32 +13,40 @@
 
 #define MAX_LEN_ATTR 10
 
-error_t check_file_name(char *file_name)
+error_t get_date(FILE *stream, node_t *node)
 {
-    for (char *ch = file_name; (*ch) != '\0'; ch++)
+    int day, month, year, hours, minutes;
+    int input = fscanf(stream, "%d.%d.%d %d:%d", &day, &month, &year, &hours, &minutes);
+    if (input != 5)
     {
-        if (!isalnum(*ch) && *ch != '.' && *ch != '-' && *ch != '_')
-        {
-            return ERR_INVALID_NAME;
-        }
+        return ERR_READ_DATA;
     }
 
-    return STATUS_OK;
-}
-
-error_t check_date(int day, int month, int year, int hours, int minutes)
-{
     if (day < 1 || day > 31 || month < 1 || month > 12
         || year < 2000 || year > 2023 || hours < 0 || hours > 23 || minutes < 0 || minutes > 59)
     {
         return ERR_INVALID_DATE;
     }
+
+    node->last_access->day = day;
+    node->last_access->month = month;
+    node->last_access->year = year;
+    node->last_access->hours = hours;
+    node->last_access->minutes = minutes;
     
     return STATUS_OK;
 }
 
-error_t get_attr(char *attr, node_t *node)
+error_t get_attr(FILE *stream, node_t *node)
 {
+    char attr[MAX_LEN_ATTR + 10];
+    int input = fscanf(stream, "%s", attr);
+
+    if (input != 1)
+    {
+        return ERR_READ_DATA;
+    }
+
     if (strlen(attr) != 10 || attr[0] != '-')
     {
         return ERR_INVALID_ATTR;
@@ -77,6 +81,34 @@ error_t get_attr(char *attr, node_t *node)
     return STATUS_OK;
 }
 
+error_t get_file_name(FILE *stream, node_t *node)
+{
+    char file_name[MAX_FILE_NAME_LEN + 10];
+
+    int input = fscanf(stream, "%s", file_name);
+    if (input != 1)
+    {
+        return ERR_READ_DATA;
+    }
+
+    if (strlen(file_name) > MAX_FILE_NAME_LEN)
+    {
+        return ERR_INVALID_NAME;
+    }
+
+    for (char *ch = file_name; (*ch) != '\0'; ch++)
+    {
+        if (!isalnum(*ch) && *ch != '.' && *ch != '-' && *ch != '_')
+        {
+            return ERR_INVALID_NAME;
+        }
+    }
+    
+    strncpy(node->name, file_name, strlen(file_name) + 1);
+
+    return STATUS_OK;
+}
+
 error_t get_file(FILE *stream, node_t **root)
 {
     node_t *node = create_node();
@@ -86,62 +118,27 @@ error_t get_file(FILE *stream, node_t **root)
         return ERR_MEMORY_ALLOCATION;
     }
 
-    char attr[MAX_LEN_ATTR + 10];
-    int input = fscanf(stream, "%s", attr);
-    if (input != 1)
-    {
-        free_node(node);
-        return ERR_READ_DATA;
-    }
-
-    error_t err = get_attr(attr, node);
+    error_t err = get_attr(stream, node);
     if (err) 
     {
         free_node(node);
         return err;
     }
 
-    int day, month, year, hours, minutes;
-    input = fscanf(stream, "%d.%d.%d %d:%d", &day, &month, &year, &hours, &minutes);
-    if (input != 5)
-    {
-        free_node(node);
-        return ERR_READ_DATA;
-    }
-
-    err = check_date(day, month, year, hours, minutes);
+    err = get_date(stream, node);
     if (err)
     {
         free_node(node);
         return err;
     }
-
-    node->last_access->day = day;
-    node->last_access->month = month;
-    node->last_access->year = year;
-    node->last_access->hours = hours;
-    node->last_access->minutes = minutes;
-    
-    char file_name[MAX_FILE_NAME_LEN + 10];
-
-    //char *check;
 
     // Get name
-    input = scanf("%s", file_name);
-    if (input != 1)
-    {
-        return ERR_READ_DATA;
-    }
-
-    err = check_file_name(file_name);
-
+    err = get_file_name(stream, node);
     if (err)
     {
         free_node(node);
         return err;
     }
-
-    strncpy(node->name, file_name, strlen(file_name) + 1);
 
     err = bst_append(root, node, compare_names);
 

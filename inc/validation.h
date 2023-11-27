@@ -5,8 +5,8 @@
 #include "string.h"
 
 // operation modes
-#define STREAM_FILE 0
-#define STREAM_STDIN 1
+#define STREAM_FILES 0
+#define STREAM_STDIN_STDOUT 1
 
 error_t check_args(int argc, int *iostream);
 

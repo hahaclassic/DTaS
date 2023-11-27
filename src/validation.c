@@ -5,12 +5,12 @@ error_t check_args(int argc, int *iostream)
 {
     if (argc == 1)
     {
-        *iostream = STREAM_STDIN;
+        *iostream = STREAM_STDIN_STDOUT;
         return STATUS_OK;
     }
     else if (argc == 3)
     {
-        *iostream = STREAM_FILE;
+        *iostream = STREAM_FILES;
         return STATUS_OK;
     }
 
