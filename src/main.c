@@ -119,7 +119,7 @@ int main(int argc, char **argv)
         }
         else
         {
-            printf("\nОперация завершена успешно.\n");
+            printf("\n[OK]: Операция завершена успешно.\n");
         }
 
         menu();
