@@ -1,40 +1,21 @@
 #include "errors.h"
 
-// Sends an error message to the terminal. 
-// If there is no error, it doesn't output anything.
-
-void err_message(int err)
+void err_message(error_t error) 
 {
-    switch (err)
+    switch (error)
     {
-        case STATUS_OK:
-            break;
-        case ERR_INCORRECT_ARG:
-            printf("[ERR]: Указаны некорректные аргументы.\n");
-            break;
-        case ERR_FILE_OPEN:
-            printf("[ERR]: Ошибка при открытии файла.\n");
-            break;
-        case ERR_EMPTY_FILE:
-            printf("[ERR]: Указан пустой файл.\n");
-            break;
-        case ERR_INVALID_DATA:
-            printf("[ERR]: В файле присутствуют некорректные данные.\n");
-            break;
-        case ERR_READ_DATA:
-            printf("[ERR]: Ошибка при попытке чтения данных.\n");
-            break;
-        case ERR_EOF:
-            printf("[ERR]: Достигнут конец файла.\n");
-            break;
-        case ERR_INCOMPLETE_STRUCT:
-            printf("[ERR]: В файле присутствуют некорректные данные.\n");
-            break;
-        case ERR_COPY_DATA:
-            printf("[ERR]: Ошибка при копировании данных.\n");
-            break;
-        default:
-            printf("[ERR]: Неизвестная ошибка.");
-            break;
+    case ERR_WRONG_OPTION:
+        printf("[ERR]: Введен неверный номер операции. Повторите попытку: ");
+        break;
+
+    case ERR_ARR_SIZE:
+        printf("[ERR]: Введен неверный размер очереди.\n");
+        break;
+
+    case ERR_MEMORY_ALLOC:
+        printf("[ERR]: Ошибка при попытке выделения памяти.\n");
+    
+    default:
+        break;
     }
 }

@@ -1,38 +1,23 @@
 #ifndef __ERRORS_H__
 #define __ERRORS_H__
 
-#include "stdio.h"
+#include <stdio.h>
+#include "consts.h"
 
-// Returned if the program or function completes successfully
-#define STATUS_OK 0
+typedef enum error {
+    STATUS_OK,
+    ERR_WRONG_OPTION,
+    ERR_ARR_SIZE,
+    ERR_MEMORY_ALLOC
+} error_t;
 
-// command line arguments error
-#define ERR_INCORRECT_ARG 1
+// static char const * const err_messages[] = {
+//         "",
+//         "Введена неправильная команда!",
+//         "Слишком большое число!",
+//         "Ошибка выделения памяти!"
+// };
 
-// file errors
-#define ERR_FILE_OPEN 2
-#define ERR_EMPTY_FILE 3
+void print_error(FILE *stream, error_t error);
 
-#define ERR_MEMORY_ALLOCATION 100
-
-// data reading errors
-#define ERR_INVALID_DATA 4
-#define ERR_READ_DATA 5
-#define ERR_EOF 6
-#define ERR_INCOMPLETE_STRUCT 7
-
-// linked list
-#define ERR_INIT_LIST 20
-
-// queue
-#define ERR_MAX_LEN 20
-
-// find
-#define ERR_NOT_FOUND 30
-
-// other
-#define ERR_COPY_DATA 9
-
-void err_message(int err);
-
-#endif
+#endif 

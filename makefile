@@ -23,7 +23,7 @@ TESTED_OBJFILES := $(filter-out $(OUT_DIR)/main.o, $(UNIT_TESTS_OBJFILES:$(OUT_D
 
 # Функции
 app.exe: $(OUT_DIR) $(OBJFILES)
-	$(CC) $(OBJFILES) -o $@
+	$(CC) $(OBJFILES) -o $@ -lm
 
 $(OUT_DIR):
 	@mkdir -p $@
@@ -31,13 +31,10 @@ $(OUT_DIR):
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-unit_tests.exe: $(OUT_DIR) $(UNIT_TESTS_OBJFILES) $(TESTED_OBJFILES) ./out/dynamic_arr.o
-	$(CC) ./out/dynamic_arr.o $(UNIT_TESTS_OBJFILES) $(TESTED_OBJFILES) -o $@ $(CHECK_FLAGS)
-
 $(OUT_DIR)/%.o: $(UNIT_TESTS_DIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-.PHONY: func stats clean mem_check
+.PHONY: func stats clean mem_check png_graph
 clean:
 	rm -f $(OUT_DIR)/*
 

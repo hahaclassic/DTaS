@@ -1,83 +1,62 @@
-#include <stdio.h>
 #include "errors.h"
-#include "validation.h"
-#include "reader.h"
-#include "writer.h"
-#include "sort.h"
-#include "linked_list.h"
-#include "find_teams.h"
+#include "interface.h"
+#include "list_queue.h"
+#include "array_queue.h"
+#include <stdio_ext.h>
 
-int main(int argc, char **argv)
+
+int main(void)
 {
-    int err;
-    int operation;
+    int log = 1;
+    int log_interval = 100;
+    int n = 1000;
+    ranges_t ranges = {
+        .t1 = {1, 5},
+        .t2 = {0, 3},
+        .t3 = {0, 4},
+        .t4 = {0, 1},
+    };
 
-    // Checking args
-    err = check_args(argc, argv, &operation);
-    if (err)
+    int option = -1, rc;
+    srand(time(NULL));
+    while (option)
     {
-        //err_message(err);
-        return err;
-    }
+        printf(OPTIONS);
+        if (scanf("%d", &option) != 1 || option < 0 || option > 4)
+        {
+            print_error(stdout, ERR_WRONG_OPTION);
+            __fpurge(stdin);
+        }
 
-    // Opening file
-    FILE *file = fopen(argv[1], "r");
-    if (!file)
-    {
-        //err_message(err);
-        return ERR_FILE_OPEN;
+        switch (option)
+        {
+            case 0:
+                break;
+            case 1:
+                if (input_values(&n,  &log, &log_interval, &ranges))
+                    print_error(stdout, ERR_ARR_SIZE);
+                break;
+            case 2:
+                print_values(n, log, log_interval, &ranges);
+                break;
+            case 3:
+                if ((rc = option_array(n, log, log_interval, &ranges)))
+                {
+                    print_error(stdout, rc);
+                    return rc;
+                }
+                break;
+            case 4:
+                if ((rc = option_list(n, log, log_interval, &ranges)))
+                {
+                    print_error(stdout, rc);
+                    return rc;
+                }
+                break;
+            default:
+                break;
+        }
     }
-
-    // Getting all teams from a file
-    dynamic_arr_t teams;
-    da_init(&teams, sizeof(team_t));
     
-    err = get_all(file, &teams);
-    fclose(file);
-    if (err)
-    {   
-        free_teams(&teams);
-        //err_message(err);
-        return err;
-    }    
-
-    node_t *head = list_init(&teams);
-
-    if (head == NULL)
-    {
-        return ERR_INIT_LIST;
-    }
-
-    // Performing the specified operation
-    switch (operation)
-    {
-        case SORT:
-            head = sort(head, compare_teams);    
-            err = print_all(argv[2], head);
-            break;
-        case PRINT_ALL:
-            err = print_all(argv[2], head);
-            break;
-        case FIND:
-            head = sort(head, compare_teams);
-
-            team_t *best, *worst;
-            err = find_teams(head, argv[3], &best, &worst);
-
-            list_free(head);
-
-            if (err)
-            {
-                free_teams(&teams);
-                //err_message(err);
-                return err;
-            }
-
-            err = print_sponsor_teams(argv[2], best, worst);
-            break;
-    }
-
-    free_teams(&teams);
-    //err_message(err);
-    return err;
+    return STATUS_OK;
 }
