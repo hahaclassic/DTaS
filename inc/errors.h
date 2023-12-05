@@ -8,16 +8,10 @@ typedef enum error {
     STATUS_OK,
     ERR_WRONG_OPTION,
     ERR_ARR_SIZE,
-    ERR_MEMORY_ALLOC
+    ERR_MEMORY_ALLOC,
+    ERR_QUEUE_IS_FULL
 } error_t;
 
-// static char const * const err_messages[] = {
-//         "",
-//         "Введена неправильная команда!",
-//         "Слишком большое число!",
-//         "Ошибка выделения памяти!"
-// };
-
-void print_error(FILE *stream, error_t error);
+void err_message(error_t error);
 
 #endif 

@@ -2,7 +2,7 @@
 
 void print_range(time_range_t *T, int i)
 {
-    printf("%sT%d:%s от %s%.2lf%s до %s%.2lf%s е.в.\n", KBWHT, i, KNRM, KBLU, T->min, KNRM, KBLU, T->max, KNRM);
+    printf("T%d: от %.2lf до %.2lf е.в.\n", i, T->min, T->max);
 }
 
 void input_range(time_range_t *T, int i)
@@ -29,7 +29,7 @@ error_t input_values(int *n, int *log_flag, int *log_interval, ranges_t *ranges)
 
     do
     {
-        printf("\nПоказывать логи? 1/0: ");
+        printf("\nПоказывать промежуточное состояние очередей? 1/0: ");
         fflush(stdin);
     }
     while (scanf("%d", log_flag) != 1 || (*log_flag != 1 && *log_flag != 0));
@@ -37,7 +37,7 @@ error_t input_values(int *n, int *log_flag, int *log_interval, ranges_t *ranges)
     if (*log_flag) 
     {
         do {
-            printf("\nПоказывать логи каждые n обработанных заявок. Введите n: ");
+            printf("\nПоказывать промежуточное состояние очередей каждые n обработанных заявок. Введите n: ");
             fflush(stdin);
         }
         while (scanf("%d", log_interval) != 1 || *log_interval <= 0);
@@ -63,12 +63,12 @@ error_t input_values(int *n, int *log_flag, int *log_interval, ranges_t *ranges)
 
 void print_values(int n, int log_flag, int log_interval, ranges_t *ranges)
 {
-    printf("\nКоличество заявок для обслуживания: %s%d%s.\n", KBLU, n, KNRM);
+    printf("\nКоличество заявок для обслуживания: %d.\n", n);
 
     if (log_flag)
-        printf("Покзывать логи каждые %s%d%s обработанных заявок.\n", KBLU, log_interval, KNRM);
+        printf("Показывать состояние очередей каждые %d обработанных заявок.\n", log_interval);
     else
-        printf("Отображение логов не задано.\n");
+        printf("Отображение промежуточного состояния отключено.\n");
 
     print_range(&ranges->t1, 1);
     print_range(&ranges->t2, 2);

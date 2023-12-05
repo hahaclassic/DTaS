@@ -24,7 +24,7 @@ int main(void)
         printf(OPTIONS);
         if (scanf("%d", &option) != 1 || option < 0 || option > 4)
         {
-            print_error(stdout, ERR_WRONG_OPTION);
+            err_message(ERR_WRONG_OPTION);
             __fpurge(stdin);
         }
 
@@ -34,7 +34,7 @@ int main(void)
                 break;
             case 1:
                 if (input_values(&n,  &log, &log_interval, &ranges))
-                    print_error(stdout, ERR_ARR_SIZE);
+                    err_message(ERR_ARR_SIZE); 
                 break;
             case 2:
                 print_values(n, log, log_interval, &ranges);
@@ -42,14 +42,14 @@ int main(void)
             case 3:
                 if ((rc = option_array(n, log, log_interval, &ranges)))
                 {
-                    print_error(stdout, rc);
+                    err_message(rc); 
                     return rc;
                 }
                 break;
             case 4:
                 if ((rc = option_list(n, log, log_interval, &ranges)))
                 {
-                    print_error(stdout, rc);
+                    err_message(rc); 
                     return rc;
                 }
                 break;
@@ -57,6 +57,6 @@ int main(void)
                 break;
         }
     }
-    
+
     return STATUS_OK;
 }

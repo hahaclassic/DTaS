@@ -8,7 +8,7 @@
 #include <math.h>
 #include "message.h"
 
-void arr_push(parameters_t *param, char c);
+error_t arr_push(parameters_t *param, char c);
 char arr_pop(parameters_t *param);
 
 error_t option_array(int n, int log_flag, int log_interval, ranges_t *ranges);

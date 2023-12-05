@@ -1,19 +1,22 @@
 #include "array_queue.h"
 
-void arr_push(parameters_t *param, char c)
+error_t arr_push(parameters_t *param, char c)
 {
     char *p_in = param->p_in;
-    if (param->p_in == param->p_out && *((char*)param->p_in) != '\0')
-        printf("Очередь переполнена.\n");
-    else
+    if (param->p_in == param->p_out && param->curr_size != 0) // && *((char*)param->p_in) != '\0'
     {
-        *((char*) param->p_in) = c;
-        
-        if (param->p_in != param->up)
-            param->p_in = p_in + 1;
-        else
-            param->p_in = param->low;
+        printf("Очередь переполнена.\n");
+        return ERR_QUEUE_IS_FULL;
     }
+    
+    *((char*) param->p_in) = c;
+    
+    if (param->p_in != param->up)
+        param->p_in = p_in + 1;
+    else
+        param->p_in = param->low;
+    
+    return STATUS_OK;
 }
 
 
@@ -21,7 +24,7 @@ char arr_pop(parameters_t *param)
 {
     char *p_out = param->p_out;
     char ps = '\0';
-    if (param->p_in == param->p_out && *((char*) param->p_in) == '\0')
+    if (param->p_in == param->p_out && param->curr_size != 0) //*((char*) param->p_in) == '\0')
     {
         printf("Очередь пуста.\n");
     }
@@ -47,6 +50,7 @@ error_t option_array(int n, int log_flag, int log_interval, ranges_t *ranges)
 {
     char *queue1, *queue2;
     parameters_t param1, param2;
+    error_t err;
 
     // allocating memory for two queues
     queue1 = calloc(MAX_LEN, sizeof(char));
@@ -142,13 +146,25 @@ error_t option_array(int n, int log_flag, int log_interval, ranges_t *ranges)
         // Add requests
         if(t_min == t_q1)
         {
-            arr_push(&param1, '1');
+            err = arr_push(&param1, '1');
+            if (err)
+            {
+                free(queue1);
+                free(queue2);
+                return err;
+            }
             param_add(&param1);
             req_in1++;
         }
         if (t_min == t_q2)
         {
-            arr_push(&param2, '2');
+            err = arr_push(&param2, '2');
+            if (err)
+            {
+                free(queue1);
+                free(queue2);
+                return err;
+            }
             param_add(&param2);
             req_in2++;
         }

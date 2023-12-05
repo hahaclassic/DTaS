@@ -261,7 +261,7 @@ error_t option_list(int n, int log_flag, int log_interval, ranges_t *ranges)
     if (flag)
     {
         printf("Переиспользованных адресов: %d\n", stats.count_reused);
-        printf("Всё ещё свободных адресов: %d\n", stats.count_freed);
+        printf("Не использовались повторно: %d\n", stats.count_freed);
         printf("Первые %d из них: \n", (int) fmin(15, stats.count_freed));
         for (int i = 0; i < fmin(15, stats.count_freed); i++)
         {
