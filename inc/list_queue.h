@@ -8,6 +8,7 @@
 #include <time.h>
 #include <math.h>
 #include "message.h"
+#include "timer.h"
 
 node_t *create_node(char c);
 node_t *add_node(node_t *head, node_t *node);

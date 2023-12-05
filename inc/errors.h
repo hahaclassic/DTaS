@@ -9,7 +9,8 @@ typedef enum error {
     ERR_WRONG_OPTION,
     ERR_ARR_SIZE,
     ERR_MEMORY_ALLOC,
-    ERR_QUEUE_IS_FULL
+    ERR_QUEUE_IS_FULL,
+    ERR_TIMER
 } error_t;
 
 void err_message(error_t error);

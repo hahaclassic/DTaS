@@ -136,7 +136,9 @@ error_t option_list(int n, int log_flag, int log_interval, ranges_t *ranges)
     double total_time_out1 = 0;
     double total_time_out2 = 0;
 
-    time_t timer_beg = clock();
+    //time_t timer_beg = clock();
+    unsigned long long timer_beg, timer_end;
+    microseconds_now(&timer_beg);
 
     while (req_out1 < n)
     {
@@ -205,14 +207,14 @@ error_t option_list(int n, int log_flag, int log_interval, ranges_t *ranges)
         if(t_min == t_q1)
         {
             if ((queue1 = list_push(queue1, '1')) == NULL)
-                return ERR_MEMORY_ALLOC;
+               return ERR_MEMORY_ALLOC;
             param_add(&param1);
             req_in1++;
         }
         if (t_min == t_q2)
         {
             if ((queue2 = list_push(queue2, '2')) == NULL)
-                return ERR_MEMORY_ALLOC;
+               return ERR_MEMORY_ALLOC;
             param_add(&param2);
             req_in2++;
         }
@@ -233,7 +235,8 @@ error_t option_list(int n, int log_flag, int log_interval, ranges_t *ranges)
         }
     }
 
-    time_t timer_end = clock();
+    //time_t timer_end = clock();
+    microseconds_now(&timer_end);
     double timer = timer_end - timer_beg;
 
     double downtime = fabs(time - total_time_out1 - total_time_out2);
