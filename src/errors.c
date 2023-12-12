@@ -13,10 +13,10 @@ void err_message(error_t err)
             printf("\n[ERR]: Указаны некорректные аргументы.\n");
             break;
         case ERR_NOT_FOUND:
-            printf("\n[ERR]: Введенное ключевое слово не найдено.\n");
+            printf("\n[ERR]: Ключевое слово не найдено.\n");
             break;
         case ERR_KEY_EXISTS:
-            printf("\n[ERR]: Введенное ключевое словов уже существует.\n");
+            printf("\n[ERR]: Данное ключевое слово уже существует.\n");
             break;
         case ERR_MEMORY_ALLOCATION:
             printf("\n[ERR]: Ошибка при выделении памяти.\n");

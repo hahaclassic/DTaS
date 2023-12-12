@@ -27,8 +27,11 @@ typedef struct memory_stats_t memory_stats_t;
 
 struct memory_stats_t
 {
-    size_t size;
     size_t len;
+    size_t open_hash_table_size;
+    size_t closed_hash_table_size;
+    size_t tree_size;
+    size_t balanced_tree_size;
     size_t open_hash_table_memory;
     size_t closed_hash_table_memory;
     size_t tree_memory;

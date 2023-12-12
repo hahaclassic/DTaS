@@ -536,18 +536,18 @@ error_t restructure_hash_tables(open_hash_table_t *open_hash_table, closed_hash_
     unsigned long long start, end;
 
     microseconds_now(&start);
-    err = open_hash_table_restruct(open_hash_table, (size_t) new_size);
+    err = closed_hash_table_restruct(closed_hash_table, (size_t) new_size);
     microseconds_now(&end);
-    stats->open_hash_table_restruct_time = end - start;
+    stats->closed_hash_table_restruct_time = end - start;
     if (err)
     {
         return err;
     }
 
     microseconds_now(&start);
-    err = closed_hash_table_restruct(closed_hash_table, (size_t) new_size);
+    err = open_hash_table_restruct(open_hash_table, (size_t) new_size);
     microseconds_now(&end);
-    stats->closed_hash_table_restruct_time = end - start;
+    stats->open_hash_table_restruct_time = end - start;
     if (err)
     {
         return err;
@@ -619,8 +619,12 @@ error_t measure_search_time(open_hash_table_t *open_hash_table, closed_hash_tabl
 
 void сalc_memory(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table, memory_stats_t *stats)
 {
-    stats->size = open_hash_table->size;
+    stats->open_hash_table_size = open_hash_table->size;
+    stats->closed_hash_table_size = closed_hash_table->size;
+    stats->tree_size = open_hash_table->len;
+    stats->balanced_tree_size = open_hash_table->len;
     stats->len = open_hash_table->len;
+
     stats->closed_hash_table_memory = sizeof(closed_hash_table_t) + sizeof(block_t) * closed_hash_table->size;
 
     stats->open_hash_table_memory = sizeof(open_hash_table_t);

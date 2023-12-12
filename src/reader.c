@@ -70,6 +70,10 @@ error_t get_table_size(size_t old_size, size_t *new_size)
     {
         return ERR_READ_DATA;
     }
+    if (new <= 0)
+    {
+        return ERR_INVALID_DATA;
+    }
 
     *new_size = (size_t) new;
     return STATUS_OK;

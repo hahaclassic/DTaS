@@ -81,7 +81,8 @@ void show_restruct_stats(restruct_stats_t *stats)
 
 void show_memory_stats(memory_stats_t *stats)
 {
-    printf(MEMORY_STAT_TABLE, stats->len, stats->size, stats->open_hash_table_memory, 
-        stats->closed_hash_table_memory, stats->tree_memory, stats->balanced_tree_memory);
+    printf(MEMORY_STAT_TABLE, stats->len, stats->open_hash_table_size, stats->open_hash_table_memory, 
+        stats->closed_hash_table_size, stats->closed_hash_table_memory, 
+        stats->tree_size, stats->tree_memory, stats->balanced_tree_size, stats->balanced_tree_memory);
 }
 
