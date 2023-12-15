@@ -15,12 +15,17 @@
              "|---------------------------------------------------------------------------------------|\n" \
              "| 1. Получить подсказку по введенному ключевому слову                                   |\n" \
              "| 2. Добавить новое ключевое слово                                                      |\n" \
-             "| 3. Реструктурировать хеш-таблицы                                                      |\n" \
-             "| 4. Вывести на экран хеш-таблицу с открытой адресацией                                 |\n" \
-             "| 5. Вывести на экран хеш-таблицу с закрытой адресацией                                 |\n" \
-             "| 6. Создать изображения (png) сбалансированного и несбалансированного дерева           |\n" \
-             "| 7. Сравнение эффективности поиска в различных структурах данных                       |\n" \
-             "| 8. Сравнение затрат памяти для различных структур данных                              |\n" \
+             "|                                                                                       |\n" \
+             "| 3. Реструктурировать хеш-таблицу с открытой адресацией                                |\n" \
+             "| 4. Реструктурировать хеш-таблицу с закрытой адресацией                                |\n" \
+             "|                                                                                       |\n" \
+             "| 5. Вывести на экран хеш-таблицу с открытой адресацией                                 |\n" \
+             "| 6. Вывести на экран хеш-таблицу с закрытой адресацией                                 |\n" \
+             "| 7. Создать изображения (png) сбалансированного и несбалансированного дерева           |\n" \
+             "|                                                                                       |\n" \
+             "| 8. Сравнение эффективности поиска выбранного ключа в различных структурах данных      |\n" \
+             "| 9. Сравнение эффективности поиска в различных структурах данных (avg)                 |\n" \
+             "| 10. Сравнение затрат памяти для различных структур данных                             |\n" \
              "|                                                                                       |\n" \
              "| 0. Выход из программы.                                                                |\n" \
              "-----------------------------------------------------------------------------------------\n" \
@@ -36,7 +41,9 @@ typedef enum _operation
 
     INSERT_DATA,
 
-    RESTRUCTURE_HASH_TABLES, 
+    RESTRUCTURE_OPEN_HASH_TABLE, 
+
+    RESTRUCTURE_CLOSED_HASH_TABLE,
 
     PRINT_OPEN_HASH_TABLE, 
  
@@ -63,10 +70,11 @@ error_t find_data(open_hash_table_t *open_hash_table, closed_hash_table_t *close
 error_t insert_data(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
     tree_node_t **tree, tree_node_t **balanced_tree);
 
-error_t restructure_hash_tables(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
-    restruct_stats_t *stats);
+error_t restructure_open_hash_table(open_hash_table_t *open_hash_table);
 
-error_t measure_search_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
+error_t restructure_closed_hash_table(closed_hash_table_t *closed_hash_table);
+
+error_t measure_user_key_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
     tree_node_t *tree, tree_node_t *balanced_tree, search_stats_t *stats);
 
 error_t measure_avg_search_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,

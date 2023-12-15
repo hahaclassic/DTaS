@@ -9,9 +9,6 @@ void err_message(error_t err)
     {
         case STATUS_OK:
             break;
-        case ERR_INCORRECT_ARG:
-            printf("\n[ERR]: Указаны некорректные аргументы.\n");
-            break;
         case ERR_NOT_FOUND:
             printf("\n[ERR]: Ключевое слово не найдено.\n");
             break;
@@ -28,7 +25,7 @@ void err_message(error_t err)
             printf("\n[ERR]: Невозможно выполнить операцию. Хеш-таблица заполнена.\n");
             break;
         case ERR_WRONG_SIZE_FOR_RESTUCT:
-            printf("\n[ERR]: Невозможно выполнить операцию. Указан некорректный новый размер для хеш-таблиц.\n");
+            printf("\n[ERR]: Невозможно выполнить операцию. Указан некорректный новый размер для хеш-таблицы.\n");
             break;
         case ERR_LIMIT_OF_COMPARISONS:
             printf("\n[ERR]: Превышен лимит сравнений в хеш-таблице. Реструктурируйте таблицу.\n");

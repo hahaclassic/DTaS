@@ -9,7 +9,6 @@ int main()
 
     search_stats_t search_stats;
     avg_search_stats_t avg_search_stats;
-    restruct_stats_t restruct_stats;
     memory_stats_t memory_stats;
 
     error_t err = init_structures(&open_hash_table, &closed_hash_table, &tree, &balanced_tree);
@@ -32,11 +31,13 @@ int main()
             err = insert_data(open_hash_table, closed_hash_table, &tree, &balanced_tree);
             break;
 
-        case RESTRUCTURE_HASH_TABLES:
-            err = restructure_hash_tables(open_hash_table, closed_hash_table, &restruct_stats);
+        case RESTRUCTURE_OPEN_HASH_TABLE:
+            err = restructure_open_hash_table(open_hash_table);
 
-            if (!err)
-                show_restruct_stats(&restruct_stats);
+            break;
+
+        case RESTRUCTURE_CLOSED_HASH_TABLE:
+            err = restructure_closed_hash_table(closed_hash_table);
 
             break;
 
@@ -53,7 +54,7 @@ int main()
             break;
         
         case COMPARE_SEARCH:
-            err = measure_search_time(open_hash_table, closed_hash_table, tree, 
+            err = measure_user_key_time(open_hash_table, closed_hash_table, tree, 
                 balanced_tree, &search_stats);
 
             if (!err)

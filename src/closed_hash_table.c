@@ -215,14 +215,23 @@ error_t closed_hash_table_find(closed_hash_table_t *table, size_t *count_compari
 {
     size_t position = table->func(key, table->size);
     block_t *block = table->data + position;
+    *count_comparison = 0;
 
-    for (; block <= table->data + table->size; block++)
-    {
+    while (block->key[0] != '\0')
+    {           
         (*count_comparison)++;
         if (strcmp(block->key, key) == 0)
         {
             *value = block->value;
             return STATUS_OK;
+        }
+        if (block == table->data + table->size - 1)
+        {
+            block = table->data;
+        }
+        else
+        {
+            block++;
         }
     }
 

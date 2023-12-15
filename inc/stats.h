@@ -1,6 +1,8 @@
 #ifndef __STATS_H__
 #define __STATS_H__
 
+#include <stddef.h>
+
 typedef struct search_stats_t search_stats_t;
 
 struct search_stats_t 
@@ -29,14 +31,6 @@ struct avg_search_stats_t
     double balanced_tree_count;
 };
 
-typedef struct restruct_stats_t restruct_stats_t;
-
-struct restruct_stats_t
-{
-    unsigned long long open_hash_table_restruct_time;
-    unsigned long long closed_hash_table_restruct_time;
-};
-
 typedef struct memory_stats_t memory_stats_t;
 
 struct memory_stats_t
@@ -51,5 +45,7 @@ struct memory_stats_t
     size_t tree_memory;
     size_t balanced_tree_memory;
 };
+
+void init_avg_stats(avg_search_stats_t *stats);
 
 #endif

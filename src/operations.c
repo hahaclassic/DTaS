@@ -25,7 +25,7 @@ const char *keys[NUM_OF_KEYWORDS] = {
     "typedef",
     "union",
     "unsigned",
-    "void ",
+    "void",
     "volatile",
     "while",
     "default",
@@ -521,8 +521,7 @@ error_t insert_data(open_hash_table_t *open_hash_table, closed_hash_table_t *clo
 }
 
 // RESTRUCTURE_HASH_TABLES (change size of hash-tables)
-error_t restructure_hash_tables(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
-    restruct_stats_t *stats)
+error_t restructure_open_hash_table(open_hash_table_t *open_hash_table)
 {
     error_t err;
     size_t new_size;
@@ -536,24 +535,44 @@ error_t restructure_hash_tables(open_hash_table_t *open_hash_table, closed_hash_
     unsigned long long start, end;
 
     microseconds_now(&start);
-    err = closed_hash_table_restruct(closed_hash_table, (size_t) new_size);
-    microseconds_now(&end);
-    stats->closed_hash_table_restruct_time = end - start;
-    if (err)
-    {
-        return err;
-    }
-
-    microseconds_now(&start);
     err = open_hash_table_restruct(open_hash_table, (size_t) new_size);
     microseconds_now(&end);
-    stats->open_hash_table_restruct_time = end - start;
     if (err)
     {
         return err;
     }
 
-    printf("[OK]: Хеш-таблицы реструктурированы успешно.\n");
+    printf("Затраченное время: %llu мкс\n", end - start);
+    printf("[OK]: Хеш-таблица реструктурирована успешно.\n");
+
+    return STATUS_OK;
+}
+
+
+error_t restructure_closed_hash_table(closed_hash_table_t *closed_hash_table)
+{
+    error_t err;
+    size_t new_size;
+
+    err = get_table_size(closed_hash_table->size, &new_size);
+    if (err)
+    {
+        return err;
+    }
+
+    unsigned long long start, end;
+
+    microseconds_now(&start);
+    err = closed_hash_table_restruct(closed_hash_table, (size_t) new_size);
+    microseconds_now(&end);
+    if (err)
+    {
+        return err;
+    }
+
+    printf("Затраченное время: %llu мкс\n", end - start);
+    printf("[OK]: Хеш-таблица реструктурирована успешно.\n");
+
     return STATUS_OK;
 }
 
@@ -613,7 +632,6 @@ error_t measure_search_time(open_hash_table_t *open_hash_table, closed_hash_tabl
 error_t measure_user_key_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
     tree_node_t *tree, tree_node_t *balanced_tree, search_stats_t *stats)
 {
-    char *data;
     char key[MAX_KEY_LEN + 20]; 
     error_t err;
 
@@ -636,14 +654,11 @@ error_t measure_user_key_time(open_hash_table_t *open_hash_table, closed_hash_ta
 error_t measure_avg_search_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
     tree_node_t *tree, tree_node_t *balanced_tree, avg_search_stats_t *stats)
 {   
-    unsigned long long start, end;
-    size_t open_count = 0, closed_count = 0, tree_count = 0, balanced_tree_count = 0;
     error_t err;
-    char *data;
-
     search_stats_t one_measurement;
+    init_avg_stats(stats);
 
-    for (size_t i = 0; i < closed_hash_table->len; i++)
+    for (size_t i = 0; i < closed_hash_table->size; i++)
     {
         if (strlen(closed_hash_table->data[i].key) != 0)
         {

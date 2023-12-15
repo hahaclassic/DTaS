@@ -267,6 +267,7 @@ error_t open_hash_table_find(open_hash_table_t *table, size_t *count_comparison,
 {
     size_t position = table->func(key, table->size);
     bucket_node_t *bucket = table->data + position;
+    *count_comparison = 0;
 
     for (; bucket != NULL; bucket = bucket->next)
     {

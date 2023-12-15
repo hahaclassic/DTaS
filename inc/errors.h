@@ -8,8 +8,6 @@ typedef enum _error
     /// При выполнении действия ошибок не возникло
     STATUS_OK = 0,
 
-    ERR_INCORRECT_ARG,
-
     ERR_NOT_FOUND,
 
     ERR_KEY_EXISTS,

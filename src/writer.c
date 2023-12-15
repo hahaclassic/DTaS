@@ -81,12 +81,6 @@ void show_avg_search_stats(avg_search_stats_t *stats)
         stats->balanced_tree_search_time, stats->balanced_tree_count);
 }
 
-void show_restruct_stats(restruct_stats_t *stats)
-{
-    printf(RESTRUCT_STAT_TABLE, stats->open_hash_table_restruct_time, 
-        stats->closed_hash_table_restruct_time);
-}
-
 void show_memory_stats(memory_stats_t *stats)
 {
     printf(MEMORY_STAT_TABLE, stats->len, stats->open_hash_table_size, stats->open_hash_table_memory, 
