@@ -15,6 +15,20 @@ struct search_stats_t
     size_t balanced_tree_count;
 };
 
+typedef struct avg_search_stats_t avg_search_stats_t;
+
+struct avg_search_stats_t 
+{
+    double open_hash_table_search_time;
+    double closed_hash_table_search_time;
+    double tree_search_time;
+    double balanced_tree_search_time;
+    double open_hash_table_count; // number of comparisons
+    double closed_hash_table_count;
+    double tree_count;
+    double balanced_tree_count;
+};
+
 typedef struct restruct_stats_t restruct_stats_t;
 
 struct restruct_stats_t

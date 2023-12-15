@@ -210,7 +210,8 @@ error_t closed_hash_table_simple_insert(closed_hash_table_t *table, bool mode, s
     return STATUS_OK;
 }
 
-error_t closed_hash_table_find(closed_hash_table_t *table, size_t *count_comparison, char *key, char **value)
+error_t closed_hash_table_find(closed_hash_table_t *table, size_t *count_comparison,
+     const char *key, char **value)
 {
     size_t position = table->func(key, table->size);
     block_t *block = table->data + position;
@@ -254,7 +255,7 @@ void closed_hash_table_show(closed_hash_table_t *table)
             printf("%zu. ", i);
             if (curr->key[0] != '\0')
             {
-                printf("{key: %s}", curr->key);
+                printf("{hash: %zu, key: %s}", table->func(curr->key, table->size), curr->key);
             }
             printf("\n");
         }

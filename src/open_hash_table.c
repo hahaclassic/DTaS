@@ -262,7 +262,8 @@ error_t open_hash_table_simple_insert(open_hash_table_t *table, bool mode, size_
     return STATUS_OK;
 }
 
-error_t open_hash_table_find(open_hash_table_t *table, size_t *count_comparison, char *key, char **value)
+error_t open_hash_table_find(open_hash_table_t *table, size_t *count_comparison,
+    const char *key, char **value)
 {
     size_t position = table->func(key, table->size);
     bucket_node_t *bucket = table->data + position;
@@ -308,7 +309,7 @@ void open_hash_table_show(open_hash_table_t *table)
             {
                 if (curr->key[0] != '\0')
                 {
-                    printf("{key: %s}", curr->key);
+                    printf("{hash: %zu, key: %s}", table->func(curr->key, table->size), curr->key);
                 }
                 if (curr->next != NULL)
                 {

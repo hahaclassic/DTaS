@@ -375,14 +375,14 @@ operation_t choose_operation()
 error_t init_structures(open_hash_table_t **open_hash_table, closed_hash_table_t **closed_hash_table,
     tree_node_t **tree, tree_node_t **balanced_tree)
 {
-    *open_hash_table = open_hash_table_create(DEFAULT_SIZE, hash_func);
+    *open_hash_table = open_hash_table_create(DEFAULT_OPEN_TABLE_SIZE, hash_func);
     
     if (*open_hash_table == NULL)
     {
         return ERR_MEMORY_ALLOCATION;
     }
 
-    *closed_hash_table = closed_hash_table_create(DEFAULT_SIZE, hash_func);
+    *closed_hash_table = closed_hash_table_create(DEFAULT_CLOSED_TABLE_SIZE, hash_func);
 
     if (*closed_hash_table == NULL)
     {
@@ -557,19 +557,12 @@ error_t restructure_hash_tables(open_hash_table_t *open_hash_table, closed_hash_
     return STATUS_OK;
 }
 
+
 error_t measure_search_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
-    tree_node_t *tree, tree_node_t *balanced_tree, search_stats_t *stats)
+    tree_node_t *tree, tree_node_t *balanced_tree, search_stats_t *stats, const char *key)
 {   
     char *data;
-    char key[MAX_KEY_LEN + 20]; 
     error_t err;
-
-    err = get_key(key);
-    if (err)
-    {
-        return err;
-    }
-
     unsigned long long start, end;
     size_t open_count = 0, closed_count = 0, tree_count = 0, balanced_tree_count = 0;
 
@@ -617,6 +610,77 @@ error_t measure_search_time(open_hash_table_t *open_hash_table, closed_hash_tabl
     return STATUS_OK;
 }
 
+error_t measure_user_key_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
+    tree_node_t *tree, tree_node_t *balanced_tree, search_stats_t *stats)
+{
+    char *data;
+    char key[MAX_KEY_LEN + 20]; 
+    error_t err;
+
+    err = get_key(key);
+    if (err)
+    {
+        return err;
+    }
+
+    err = measure_search_time(open_hash_table, closed_hash_table, tree, balanced_tree, stats, key);
+    if (err)
+    {
+        return err;
+    }
+
+    return STATUS_OK;
+}
+
+
+error_t measure_avg_search_time(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table,
+    tree_node_t *tree, tree_node_t *balanced_tree, avg_search_stats_t *stats)
+{   
+    unsigned long long start, end;
+    size_t open_count = 0, closed_count = 0, tree_count = 0, balanced_tree_count = 0;
+    error_t err;
+    char *data;
+
+    search_stats_t one_measurement;
+
+    for (size_t i = 0; i < closed_hash_table->len; i++)
+    {
+        if (strlen(closed_hash_table->data[i].key) != 0)
+        {
+            err = measure_search_time(open_hash_table, closed_hash_table, tree, balanced_tree,
+                &one_measurement, closed_hash_table->data[i].key);
+
+            if (err)
+            {
+                return err;
+            }
+
+            stats->open_hash_table_search_time += one_measurement.open_hash_table_search_time;
+            stats->open_hash_table_count += one_measurement.open_hash_table_count;
+
+            stats->closed_hash_table_search_time += one_measurement.closed_hash_table_search_time;
+            stats->closed_hash_table_count += one_measurement.closed_hash_table_count;
+
+            stats->tree_search_time += one_measurement.tree_search_time;
+            stats->tree_count += one_measurement.tree_count;
+
+            stats->balanced_tree_search_time += one_measurement.balanced_tree_search_time;
+            stats->balanced_tree_count += one_measurement.balanced_tree_count;
+        }
+    }
+
+    stats->open_hash_table_search_time /= (double) open_hash_table->len;
+    stats->closed_hash_table_search_time /= (double) open_hash_table->len;
+    stats->tree_search_time /= (double) open_hash_table->len;
+    stats->balanced_tree_search_time /= (double) open_hash_table->len;
+    stats->open_hash_table_count /= (double) open_hash_table->len;
+    stats->closed_hash_table_count /= (double) open_hash_table->len;
+    stats->tree_count /= (double) open_hash_table->len;
+    stats->balanced_tree_count /= (double) open_hash_table->len;
+
+    return STATUS_OK;
+}
+
 void сalc_memory(open_hash_table_t *open_hash_table, closed_hash_table_t *closed_hash_table, memory_stats_t *stats)
 {
     stats->open_hash_table_size = open_hash_table->size;
@@ -642,3 +706,4 @@ void сalc_memory(open_hash_table_t *open_hash_table, closed_hash_table_t *close
     stats->tree_memory = sizeof(tree_node_t) * open_hash_table->len;
     stats->balanced_tree_memory = sizeof(tree_node_t) * open_hash_table->len;
 }
+

@@ -37,7 +37,7 @@ error_t open_hash_table_insert(open_hash_table_t *table, const char *key, const 
 error_t open_hash_table_simple_insert(open_hash_table_t *table, bool mode, size_t *count,
     const char *key, const char *value);
 
-error_t open_hash_table_find(open_hash_table_t *table, size_t *count_comparison, char *key, char **value);
+error_t open_hash_table_find(open_hash_table_t *table, size_t *count_comparison, const char *key, char **value);
 
 
 void open_hash_table_show(open_hash_table_t *table);

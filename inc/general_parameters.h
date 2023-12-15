@@ -7,7 +7,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define DEFAULT_SIZE 100
+#define DEFAULT_OPEN_TABLE_SIZE 41
+#define DEFAULT_CLOSED_TABLE_SIZE 61
 
 #define MAX_KEY_LEN 20
 #define MAX_VALUE_LEN 1000

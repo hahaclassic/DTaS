@@ -8,6 +8,7 @@ int main()
     tree_node_t *balanced_tree = NULL;
 
     search_stats_t search_stats;
+    avg_search_stats_t avg_search_stats;
     restruct_stats_t restruct_stats;
     memory_stats_t memory_stats;
 
@@ -59,6 +60,16 @@ int main()
                 show_search_stats(&search_stats);
                 
             break;
+
+        case COMPARE_AVG_SEARCH:
+            err = measure_avg_search_time(open_hash_table, closed_hash_table, tree, 
+                balanced_tree, &avg_search_stats);
+
+            if (!err)
+                show_avg_search_stats(&avg_search_stats);
+                
+            break;
+
 
         case COMPARE_MEMORY:
 
