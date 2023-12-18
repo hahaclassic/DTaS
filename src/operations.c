@@ -122,7 +122,7 @@ error_t measure_time(adjacency_matrix_t *matrix)
         }
     }
     
-    avg_time /= (double) num_of_mesures * matrix->num_of_vertices;
+    avg_time /= (double) (num_of_mesures * matrix->num_of_vertices);
     size_t memory = sizeof(int) * matrix->num_of_vertices * matrix->num_of_vertices;
     printf(STATISTICS, avg_time, memory, sizeof(int) * matrix->num_of_vertices * 2);
 

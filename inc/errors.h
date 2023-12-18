@@ -21,8 +21,6 @@ typedef enum _error
     ERR_INVALID_OPERATION,
 
     ERR_TIMER,
-
-    ERR_DISCONNECTED_GRAPH,
 } error_t;
 
 void err_message(error_t err);

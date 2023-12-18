@@ -30,9 +30,6 @@ void err_message(error_t err)
         case ERR_TIMER:
             printf("\n[ERR]: Ошибка при измерении времени\n");
             break;
-        case ERR_DISCONNECTED_GRAPH:
-            printf("\n[ERR]: Указан несвязаный граф.\n");
-            break;
         default:
             printf("\n[ERR]: Неизвестная ошибка.");
             break;
