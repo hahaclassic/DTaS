@@ -32,6 +32,7 @@ int main(int argc, char **argv)
 
     if (err)
     {
+        err_message(err);
         return err;
     }
 
