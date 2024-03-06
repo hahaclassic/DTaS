@@ -49,16 +49,6 @@ pink
 764427
 8
 21
-Kia
-France
-pink
-69912
-1
-0
-1952
-200291
-6
-20
 Suzuki
 South Korea
 light blue
@@ -93,6 +83,16 @@ black
 1
 0
 2009
+10000
+0
+1
+Ford
+Russia
+red
+15000
+1
+0
+2020
 10000
 0
 1
