@@ -1,2 +1,9 @@
-*.o
 *.exe
+*.out
+*.o
+*.pch
+*.gch
+.vscode
+temp.txt
+result
+extra_file
